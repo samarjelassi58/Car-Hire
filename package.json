@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "lucide-react": "^0.513.0",
+    "redux-persist": "^6.0.0"
+  }
+}

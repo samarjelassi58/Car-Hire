@@ -3,9 +3,10 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/react';
+import { useSelector, useDispatch } from "react-redux";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link , useLocation } from 'react-router-dom'; // ← pour connaître l'URL actuelle
-
+import { logoutUser } from "../app/redux/thunks/authThunks";
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
@@ -19,6 +20,11 @@ function classNames(...classes) {
 }
 const Navbar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const handleLogout = () => {
+  dispatch(logoutUser());
+};
 
   return (
     <Disclosure as="nav" className="bg-white fixed top-0 left-0 right-0 z-50 shadow-md">
@@ -38,7 +44,7 @@ const Navbar = () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
                <Link to="/">
-               <img className="h-10 w-auto" src="/images/logo.png" alt="CarHire" />
+               <img className="h-10 w-auto" src="/images/logo.svg" alt="CarHire" />
                </Link>
               
             </div>
@@ -68,12 +74,22 @@ const Navbar = () => {
 
           {/* Login Button */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <a
-              href="/login"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
-            >
-              Login
-            </a>
+           {user ? (
+  <button
+    onClick={handleLogout}
+    className="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
+  >
+    Logout
+  </button>
+) : (
+  <a
+    href="/login"
+    className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
+  >
+    Login
+  </a>
+)}
+
           </div>
         </div>
       </div>

@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState ,  useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../app/redux/userSlice";
+import { registerUser } from "../../app/redux/thunks/userThunks";
+import { loginUser } from "../../app/redux/thunks/authThunks";
 
 export default function SignInpForm() {
   const [isSignIn, setIsSignIn] = useState(true);
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+
+
+  // Sélection des états pour inscription et connexion
+  const userState = useSelector((state) => state.user);
+  const authState = useSelector((state) => state.auth);
+  
 
   const [formData, setFormData] = useState({
     FirstName: "",
@@ -35,13 +44,35 @@ export default function SignInpForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!isSignIn) {
       dispatch(registerUser(formData));
     } else {
-      console.log("Connexion pas encore implémentée");
+      dispatch(loginUser({ Email: formData.Email, Password: formData.Password }));
     }
   };
 
+  const loading = isSignIn ? authState.loading : userState.loading;
+  const error = isSignIn ? authState.error : userState.error;
+  const success = userState.success; // On ne montre le message de succès que pour l'inscription
+
+
+  useEffect(() => {
+  if (authState.user && authState.user.role) {
+    const { role } = authState.user;
+
+    // Message succès temporaire
+    const successMessage = "Authenticated successfully! Redirecting...";
+
+    if (role === "admin") {
+      alert(successMessage); // ou toast/système de notif
+      navigate("/dashboard");
+    } else if (role === "client") {
+      alert(successMessage);
+      navigate("/");
+    }
+  }
+}, [authState.user, navigate]);
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -152,12 +183,14 @@ export default function SignInpForm() {
             type="submit"
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
           >
-            {isSignIn ? "Sign In" : loading ? "Creating..." : "Sign Up"}
+            {isSignIn ? (loading ? "Signing In..." : "Sign In") : loading ? "Creating..." : "Sign Up"}
           </button>
         </div>
 
         {loading && <p className="mt-4 text-center text-blue-500">Processing...</p>}
-        {success && <p className="mt-4 text-center text-green-600">Account created successfully!</p>}
+        {success && !isSignIn && (
+          <p className="mt-4 text-center text-green-600">Account created successfully!</p>
+        )}
         {error && <p className="mt-4 text-center text-red-500">{error}</p>}
 
         <p className="mt-6 text-center text-sm text-gray-600">

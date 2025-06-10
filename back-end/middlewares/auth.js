@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
         .json({ success: false, message: "User no longer exists" });
     }
 
-    req.user = { id: user._id, role: user.role };
+    req.user = user;
     next();
   } catch (err) {
     console.error("Authentication error:", err.message);
