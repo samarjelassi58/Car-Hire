@@ -16,12 +16,14 @@ Une application web complète pour la gestion de location de voitures, développ
 Le projet est structuré en deux parties principales :
 
 ### Backend (`/back-end`)
+
 - **Framework** : Node.js avec Express
 - **Base de données** : MongoDB (avec Mongoose)
 - **Authentification** : JWT (JSON Web Tokens)
 - **Architecture** : MVC (Model-View-Controller)
 
 ### Frontend (`/front-end`)
+
 - **Framework** : React avec Vite
 - **Gestion d'état** : Redux Toolkit
 - **Styling** : CSS moderne
@@ -30,17 +32,20 @@ Le projet est structuré en deux parties principales :
 ## 📦 Installation
 
 ### Prérequis
+
 - Node.js (version 14 ou supérieure)
 - npm ou yarn
 - MongoDB
 
 ### Installation du Backend
+
 ```bash
 cd back-end
 npm install
 ```
 
 ### Installation du Frontend
+
 ```bash
 cd front-end
 npm install
@@ -49,12 +54,14 @@ npm install
 ## 🚀 Démarrage
 
 ### Démarrer le serveur backend
+
 ```bash
 cd back-end
 npm start
 ```
 
 ### Démarrer l'application frontend
+
 ```bash
 cd front-end
 npm run dev
@@ -84,6 +91,7 @@ car-hire/
 ## 🔧 Configuration
 
 1. Créez un fichier `.env` dans le dossier `back-end` :
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/car-hire
@@ -97,6 +105,7 @@ JWT_EXPIRE=7d
 ## 🛠️ Technologies Utilisées
 
 ### Backend
+
 - Node.js
 - Express.js
 - MongoDB & Mongoose
@@ -104,6 +113,7 @@ JWT_EXPIRE=7d
 - bcryptjs pour le hashage des mots de passe
 
 ### Frontend
+
 - React 18
 - Redux Toolkit
 - React Router
@@ -139,7 +149,7 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 👨‍💻 Auteur
 
-**[Votre Nom]** - *Développeur Full Stack*
+**[Votre Nom]** - _Développeur Full Stack_
 
 ## 📞 Support
 

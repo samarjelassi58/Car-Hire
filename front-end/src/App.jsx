@@ -32,8 +32,9 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/about" element={<About/>}/>
           <Route path="/reservation" element={<Reservation/>}/>
+          <Route path="/reservation/:id" element={<Reservation/>}/>
           <Route path="/cars" element={<Cars/>}/>
-          <Route path="/car" element={<Car/>}/>
+          <Route path="/car/:id" element={<Car/>}/>
           <Route path="notfound" element={<NotFound/>} />
           
           //Admin

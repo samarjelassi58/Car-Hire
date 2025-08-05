@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "name": "Toyota Yaris",
+    "price": "80 TND/day",
+    "image": "/images/yaris.jpg",
+    "features": ["5 Seats", "Manual", "AC", "Bluetooth"],
+    "description": "Perfect for city driving and economical fuel consumption."
+  },
+  {
+    "id": 2,
+    "name": "BMW 3 Series",
+    "price": "200 TND/day",
+    "image": "/images/bmw.jpg",
+    "features": ["5 Seats", "Automatic", "Leather", "GPS"],
+    "description": "Luxury sedan with premium comfort and advanced features."
+  },
+  {
+    "id": 3,
+    "name": "Dacia Duster",
+    "price": "120 TND/day",
+    "image": "/images/duster.jpg",
+    "features": ["5 Seats", "4WD", "AC", "High Ground"],
+    "description": "Robust SUV perfect for adventures and off-road trips."
+  },
+  {
+    "id": 4,
+    "name": "Mercedes C-Class",
+    "price": "250 TND/day",
+    "image": "/images/mercedes-c.jpg",
+    "features": ["5 Seats", "Automatic", "Premium Sound", "Sunroof"],
+    "description": "Elegant luxury sedan with sophisticated design and comfort."
+  },
+  {
+    "id": 5,
+    "name": "Volkswagen Golf",
+    "price": "90 TND/day",
+    "image": "/images/golf.jpg",
+    "features": ["5 Seats", "Manual", "AC", "USB Ports"],
+    "description": "Reliable compact car ideal for urban and highway driving."
+  },
+  {
+    "id": 6,
+    "name": "Peugeot 208",
+    "price": "75 TND/day",
+    "image": "/images/peugeot208.jpg",
+    "features": ["5 Seats", "Manual", "AC", "Touchscreen"],
+    "description": "Stylish city car with modern design and efficient performance."
+  },
+  {
+    "id": 7,
+    "name": "Audi A4",
+    "price": "220 TND/day",
+    "image": "/images/audi-a4.jpg",
+    "features": ["5 Seats", "Automatic", "Quattro", "LED Lights"],
+    "description": "Premium sedan combining performance with luxury and technology."
+  },
+  {
+    "id": 8,
+    "name": "Hyundai Tucson",
+    "price": "140 TND/day",
+    "image": "/images/tucson.jpg",
+    "features": ["5 Seats", "AWD", "Panoramic Roof", "Heated Seats"],
+    "description": "Modern SUV with spacious interior and advanced safety features."
+  },
+  {
+    "id": 9,
+    "name": "Ford Focus",
+    "price": "85 TND/day",
+    "image": "/images/focus.jpg",
+    "features": ["5 Seats", "Manual", "AC", "Cruise Control"],
+    "description": "Dependable family car with comfortable ride and good fuel economy."
+  },
+  {
+    "id": 10,
+    "name": "Renault Clio",
+    "price": "70 TND/day",
+    "image": "/images/clio.jpg",
+    "features": ["5 Seats", "Manual", "AC", "Bluetooth"],
+    "description": "Economical compact car perfect for city driving and daily commute."
+  },
+  {
+    "id": 11,
+    "name": "Range Rover Evoque",
+    "price": "300 TND/day",
+    "image": "/images/evoque.jpg",
+    "features": ["5 Seats", "AWD", "Premium Interior", "Navigation"],
+    "description": "Luxury compact SUV with distinctive design and off-road capability."
+  },
+  {
+    "id": 12,
+    "name": "Nissan Qashqai",
+    "price": "110 TND/day",
+    "image": "/images/qashqai.jpg",
+    "features": ["5 Seats", "CVT", "Safety Shield", "Apple CarPlay"],
+    "description": "Versatile crossover SUV with intelligent mobility technologies."
+  }
+]

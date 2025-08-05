@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import CarCard from "../components/CarCard";
 import { FaCarSide, FaShieldAlt, FaHeadset } from "react-icons/fa";
 
 const Home = () => {
@@ -53,24 +54,34 @@ const Home = () => {
         {/* Featured Cars */}
         <section className="py-20 px-6 bg-white">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Featured Cars</h2>
-          <div className="grid sm:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              { name: "Toyota Yaris", price: "80 TND/day", image: "/images/yaris.jpg" },
-              { name: "BMW 3 Series", price: "200 TND/day", image: "/images/bmw.jpg" },
-              { name: "Dacia Duster", price: "120 TND/day", image: "/images/duster.jpg" },
-            ].map((car) => (
-              <div key={car.name} className="bg-indigo-50 p-4 rounded-xl shadow text-center">
-                <img src={car.image} alt={car.name} className="rounded-lg w-full h-40 object-cover mb-4" />
-                <h3 className="font-semibold text-lg text-gray-800">{car.name}</h3>
-                <p className="text-indigo-600 font-bold">{car.price}</p>
-                <a
-                  href="/reservation"
-                  className="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition"
-                >
-                  Reserve
-                </a>
-              </div>
-            ))}
+          <div className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto">
+            <CarCard 
+              car={{
+                name: "Toyota Yaris",
+                price: "80 TND/day",
+                image: "/images/yaris.jpg",
+                features: ["5 Seats", "Manual", "AC", "Bluetooth"],
+                description: "Perfect for city driving and economical fuel consumption."
+              }}
+            />
+            <CarCard 
+              car={{
+                name: "BMW 3 Series",
+                price: "200 TND/day",
+                image: "/images/bmw.jpg",
+                features: ["5 Seats", "Automatic", "Leather", "GPS"],
+                description: "Luxury sedan with premium comfort and advanced features."
+              }}
+            />
+            <CarCard 
+              car={{
+                name: "Dacia Duster",
+                price: "120 TND/day",
+                image: "/images/duster.jpg",
+                features: ["5 Seats", "4WD", "AC", "High Ground"],
+                description: "Robust SUV perfect for adventures and off-road trips."
+              }}
+            />
           </div>
         </section>
 
