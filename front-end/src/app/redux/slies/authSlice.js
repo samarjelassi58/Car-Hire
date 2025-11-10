@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, loadUserFromToken } from "../thunks/authThunks"; // 👈 importer les thunks ici
+import { loginUser, logoutUser, loadUserFromToken } from "../thunks/authThunks";
 
 const initialState = {
   user: null,

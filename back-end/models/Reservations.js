@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const reservationSchema = new mongoose.Schema({
-  voitureId: {
+  carId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Car",
     required: true,
@@ -11,8 +11,8 @@ const reservationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  dateDebut: { type: Date, required: true },
-  dateFin: { type: Date, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
 });
 
 module.exports = mongoose.model("Reservation", reservationSchema);

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../app/redux/thunks/userThunks";
 import { loginUser } from "../../app/redux/thunks/authThunks";
+import SuccessAlert from "../Alerts/SuccessAlert";
+import FailureAlert from "../Alerts/FailureAlert";
 
 export default function SignInpForm() {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -56,23 +58,47 @@ export default function SignInpForm() {
   const error = isSignIn ? authState.error : userState.error;
   const success = userState.success; // On ne montre le message de succès que pour l'inscription
 
+  // Local alert UI state
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
 
   useEffect(() => {
-  if (authState.user && authState.user.role) {
-    const { role } = authState.user;
+    if (authState.user && authState.user.role) {
+      const { role } = authState.user;
 
-    // Message succès temporaire
-    const successMessage = "Authenticated successfully! Redirecting...";
-
-    if (role === "admin") {
-      alert(successMessage); // ou toast/système de notif
-      navigate("/dashboard");
-    } else if (role === "client") {
-      alert(successMessage);
-      navigate("/");
+      // Navigate immediately after login
+      if (role === "admin") {
+        navigate("/dashboard");
+      } else if (role === "client") {
+        navigate("/");
+      }
     }
-  }
-}, [authState.user, navigate]);
+  }, [authState.user, navigate]);
+
+  // Watch for success / error to show alerts
+  useEffect(() => {
+    if (success) {
+      setAlertMessage(typeof success === 'string' ? success : 'Account created successfully!');
+      setShowSuccess(true);
+      // auto-dismiss
+      const t = setTimeout(() => setShowSuccess(false), 4000);
+      return () => clearTimeout(t);
+    }
+    // hide when success becomes false
+    if (!success) setShowSuccess(false);
+  }, [success]);
+
+  useEffect(() => {
+    if (error) {
+      setAlertMessage(typeof error === 'string' ? error : 'An error occurred');
+      setShowFailure(true);
+      const t = setTimeout(() => setShowFailure(false), 5000);
+      return () => clearTimeout(t);
+    }
+    if (!error) setShowFailure(false);
+  }, [error]);
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
@@ -82,6 +108,16 @@ export default function SignInpForm() {
         <p className="mt-2 text-lg text-gray-600">
           {isSignIn ? "Access your account" : "Create your account to get started"}
         </p>
+      </div>
+
+      {/* Alerts */}
+      <div className="mx-auto mt-6 max-w-xl">
+        {showSuccess && (
+          <SuccessAlert message={alertMessage} onClose={() => setShowSuccess(false)} />
+        )}
+        {showFailure && (
+          <FailureAlert message={alertMessage} onClose={() => setShowFailure(false)} />
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
@@ -188,10 +224,6 @@ export default function SignInpForm() {
         </div>
 
         {loading && <p className="mt-4 text-center text-blue-500">Processing...</p>}
-        {success && !isSignIn && (
-          <p className="mt-4 text-center text-green-600">Account created successfully!</p>
-        )}
-        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
 
         <p className="mt-6 text-center text-sm text-gray-600">
           {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}

@@ -7,7 +7,8 @@ const path = require("path");
 
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
-
+const messageRoutes = require("./routes/message.routes");
+const carRoutes = require("./routes/car.routes");
 // Database connection
 connectDB();
 
@@ -43,6 +44,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/message", messageRoutes);
+app.use("/api/car", carRoutes);
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "OK" });
