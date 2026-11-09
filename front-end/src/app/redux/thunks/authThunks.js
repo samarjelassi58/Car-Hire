@@ -1,55 +1,44 @@
-// src/app/redux/authThunks.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { AUTH_API } from "../../utils/api";
+import { AUTH_API, authHeaders, getErrorMessage } from "../../utils/api";
 
-// 🔐 Login
+export const SESSION_EXPIRED = "Session expirée";
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ Email, Password }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${AUTH_API}/login`, {
-        Email,
-        Password,
-      });
+      const res = await axios.post(`${AUTH_API}/login`, { Email, Password });
       localStorage.setItem("token", res.data.token);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Login failed");
+      return rejectWithValue(getErrorMessage(err, "Connexion impossible"));
     }
   }
 );
 
-// 🚪 Logout
-export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(`${AUTH_API}/logout`, null, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      localStorage.removeItem("token");
-    } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Logout failed");
-    }
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  try {
+    await axios.post(`${AUTH_API}/logout`, null, { headers: authHeaders() });
+  } finally {
+    // La session locale est toujours supprimée, même si l'API est injoignable.
+    localStorage.removeItem("token");
   }
-);
+});
 
 export const loadUserFromToken = createAsyncThunk(
   "auth/loadUserFromToken",
   async (_, { rejectWithValue }) => {
+    if (!localStorage.getItem("token")) return rejectWithValue(SESSION_EXPIRED);
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-
-      const response = await axios.get(`${AUTH_API}/verify`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      return { user: response.data.user };
+      const res = await axios.get(`${AUTH_API}/verify`, { headers: authHeaders() });
+      return { user: res.data.user };
     } catch (err) {
-      return rejectWithValue("Failed to load user");
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        return rejectWithValue(SESSION_EXPIRED);
+      }
+      return rejectWithValue(getErrorMessage(err));
     }
   }
 );

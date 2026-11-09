@@ -1,13 +1,14 @@
-const mongoose = require("mongoose");
+﻿const mongoose = require("mongoose");
 
 const carSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  pricePerDay: { type: Number, required: true }, 
-  fuelType: { type: String },
-  category: { type: String },
-  tag: { type: String },
-  options: [{ type: String }],
-  image: { type: String },
+  name: { type: String, required: true, trim: true },
+  pricePerDay: { type: Number, required: true, min: 0 },
+  fuelType: { type: String, trim: true },
+  transmission: { type: String, trim: true },
+  category: { type: String, trim: true },
+  tag: { type: String, trim: true },
+  options: [{ type: String, trim: true }],
+  image: { type: String, trim: true },
   reservedPeriods: [
     {
       startDate: { type: Date, required: true },

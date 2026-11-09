@@ -1,31 +1,51 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { MESSAGE_API } from "../../utils/api";
+import { MESSAGE_API, authHeaders, getErrorMessage } from "../../utils/api";
 
-// Fetch all messages (admin view)
 export const fetchMessages = createAsyncThunk(
-	"message/fetchMessages",
-	async (_, { rejectWithValue }) => {
-		try {
-			const token = localStorage.getItem("token");
-			const headers = token ? { Authorization: `Bearer ${token}` } : {};
-			const res = await axios.get(`${MESSAGE_API}/getMessages`, { headers });
-			return res.data; // expect { success: true, data: [...] } or array
-		} catch (err) {
-			return rejectWithValue(err.response?.data?.message || "Failed to fetch messages");
-		}
-	}
+  "message/fetchMessages",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${MESSAGE_API}/getMessages`, { headers: authHeaders() });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Impossible de charger les messages"));
+    }
+  }
 );
 
-// Send a new message (contact us)
 export const sendMessage = createAsyncThunk(
-	"message/sendMessage",
-	async (messageData, { rejectWithValue }) => {
-		try {
-			const res = await axios.post(`${MESSAGE_API}/addMessage`, messageData);
-			return res.data;
-		} catch (err) {
-			return rejectWithValue(err.response?.data?.message || "Failed to send message");
-		}
-	}
+  "message/sendMessage",
+  async (messageData, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${MESSAGE_API}/addMessage`, messageData);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Envoi du message impossible"));
+    }
+  }
+);
+
+export const updateMessageStatus = createAsyncThunk(
+  "message/updateMessageStatus",
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const res = await axios.patch(`${MESSAGE_API}/${id}/status`, { status }, { headers: authHeaders() });
+      return res.data.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Mise à jour impossible"));
+    }
+  }
+);
+
+export const deleteMessage = createAsyncThunk(
+  "message/deleteMessage",
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`${MESSAGE_API}/${id}`, { headers: authHeaders() });
+      return id;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Suppression impossible"));
+    }
+  }
 );

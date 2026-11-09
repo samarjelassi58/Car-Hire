@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link , useLocation } from 'react-router-dom'; // ← pour connaître l'URL actuelle
 import { logoutUser } from "../app/redux/thunks/authThunks";
-const navigation = [
+const baseNavigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   { name: 'Our Cars', href: '/cars' },
@@ -22,6 +22,16 @@ const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const navigation = !user
+    ? baseNavigation
+    : [
+      ...baseNavigation.map((item) =>
+        item.href === '/reservation'
+          ? { name: 'My Reservations', href: '/my-reservations' }
+          : item
+      ),
+      ...(user.role === 'admin' ? [{ name: 'Dashboard', href: '/dashboard' }] : []),
+    ];
   const handleLogout = () => {
   dispatch(logoutUser());
 };
@@ -54,9 +64,9 @@ const Navbar = () => {
                   const isActive = location.pathname === item.href;
 
                   return (
-                    <a
+                    <Link
                       key={item.name}
-                      href={item.href}
+                      to={item.href}
                       className={classNames(
                         isActive
                           ? 'bg-indigo-600 text-white'
@@ -65,7 +75,7 @@ const Navbar = () => {
                       )}
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
@@ -82,12 +92,12 @@ const Navbar = () => {
     Logout
   </button>
 ) : (
-  <a
-    href="/login"
+  <Link
+    to="/login"
     className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
   >
     Login
-  </a>
+  </Link>
 )}
 
           </div>
@@ -103,8 +113,8 @@ const Navbar = () => {
             return (
               <DisclosureButton
                 key={item.name}
-                as="a"
-                href={item.href}
+                as={Link}
+                to={item.href}
                 className={classNames(
                   isActive
                     ? 'bg-indigo-600 text-white'
@@ -117,12 +127,21 @@ const Navbar = () => {
             );
           })}
 
-          <a
-            href="/login"
-            className="block mt-2 rounded-md bg-indigo-600 text-white px-3 py-2 text-base font-medium text-center hover:bg-indigo-700 transition"
-          >
-            Login
-          </a>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="block w-full mt-2 rounded-md bg-red-500 text-white px-3 py-2 text-base font-medium text-center hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="block mt-2 rounded-md bg-indigo-600 text-white px-3 py-2 text-base font-medium text-center hover:bg-indigo-700 transition"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </DisclosurePanel>
     </Disclosure>

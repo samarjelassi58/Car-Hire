@@ -7,7 +7,11 @@ const MessageSchema = new mongoose.Schema({
   phoneNumber: { type: String },
   messageObject: { type: String },
   message: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["new", "read", "closed"],
+    default: "new",
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Message', MessageSchema);
-

@@ -13,6 +13,15 @@ const reservationSchema = new mongoose.Schema({
   },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-});
+  status: {
+    type: String,
+    enum: ["pending", "confirmed", "cancelled"],
+    default: "pending",
+    required: true,
+  },
+}, { timestamps: true });
+
+reservationSchema.index({ carId: 1, startDate: 1, endDate: 1 });
+reservationSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.model("Reservation", reservationSchema);

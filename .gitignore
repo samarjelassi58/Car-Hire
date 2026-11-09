@@ -154,8 +154,16 @@ data/
 uploads/
 public/uploads/
 
+# Python / Postman artifacts
+.venv/
+__pycache__/
+postman-results.json
+postman-report.html
+
 # Session files
 sessions/
 
 # Cache
 .cache/
+
+e2e/reports/

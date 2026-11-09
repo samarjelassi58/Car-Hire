@@ -1,26 +1,32 @@
-const User = require("../models/User"); // Assure-toi que c’est le bon modèle
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const authenticate = async (Email, Password) => {
-  // This will find both Users and Students (since they're in the same collection)
-  const user = await User.findOne({ Email }).select("+Password");
 
-  if (!user) {
-    throw new Error("Utilisateur non trouvé");
+const toPublicUser = (user) => {
+  const result = user.toObject();
+  delete result.Password;
+  return result;
+};
+
+const authenticate = async (Email, Password) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not configured");
   }
 
-  const isMatch = await bcrypt.compare(Password, user.Password);
-  if (!isMatch) {
-    throw new Error("Mot de passe incorrect");
+  const normalizedEmail = typeof Email === "string" ? Email.trim().toLowerCase() : "";
+  const user = await User.findOne({ Email: normalizedEmail }).select("+Password");
+
+  if (!user || typeof Password !== "string" || !(await bcrypt.compare(Password, user.Password))) {
+    return null;
   }
 
   const token = jwt.sign(
     { id: user._id, role: user.role },
-    process.env.JWT_SECRET || "secretkey",
+    process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
 
-  return { token, user };
+  return { token, user: toPublicUser(user) };
 };
 
 module.exports = { authenticate };

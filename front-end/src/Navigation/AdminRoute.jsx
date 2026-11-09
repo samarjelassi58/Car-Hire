@@ -1,15 +1,5 @@
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
-const AdminRoute = ({ children }) => {
-  const userA = useSelector((state) => state.auth.user);
- console.log("userA premiere:", userA)
-  if (!userA || userA.role !== "admin") {
-    console.log("userA deuxieme :", userA)
-    return <Navigate to="/NotFound" />;
-  }
-
-  return children;
-};
+const AdminRoute = ({ children }) => <ProtectedRoute role="admin">{children}</ProtectedRoute>;
 
 export default AdminRoute;

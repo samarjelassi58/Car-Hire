@@ -1,27 +1,18 @@
-const blacklistedTokens = new Map();
+const crypto = require("crypto");
+const RevokedToken = require("../models/RevokedToken");
 
-const addToBlacklist = (token, expiresAt) => {
-  blacklistedTokens.set(token, expiresAt);
+const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
+
+const addToBlacklist = async (token, expiresAt) => {
+  await RevokedToken.updateOne(
+    { tokenHash: hashToken(token) },
+    { $set: { expiresAt: new Date(expiresAt) } },
+    { upsert: true }
+  );
 };
 
-const isTokenBlacklisted = (token) => {
-  return blacklistedTokens.has(token);
-};
+const isTokenBlacklisted = async (token) =>
+  Boolean(await RevokedToken.exists({ tokenHash: hashToken(token) }));
 
-const cleanExpiredTokens = () => {
-  const now = Date.now();
-  for (const [token, expiresAt] of blacklistedTokens.entries()) {
-    if (expiresAt <= now) {
-      blacklistedTokens.delete(token);
-    }
-  }
-};
-
-setInterval(cleanExpiredTokens, 3600000);
-
-module.exports = {
-  blacklistedTokens,
-  addToBlacklist,
-  isTokenBlacklisted,
-  cleanExpiredTokens,
-};
+module.exports = { addToBlacklist, isTokenBlacklisted };

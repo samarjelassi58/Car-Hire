@@ -1,52 +1,58 @@
+const mongoose = require("mongoose");
 const Message = require("../models/Message");
+const ApiError = require("../utils/ApiError");
+
+const emailPattern = /^\S+@\S+\.\S+$/;
+
 exports.addMessage = async (req, res) => {
-  try {
-    const { firstName, lastName, email, phoneNumber, messageObject, message } = req.body;
-
-    if (!firstName || !lastName || !email || !message) {
-      return res.status(400).json({
-        success: false,
-        message: "Tous les champs sont requis",
-      });
-    }
-
-    const newMessage = new Message({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      messageObject,
-      message,
-    });
-
-    await newMessage.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Message ajouté avec succès",
-      data: newMessage,
-    });
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du message :", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Erreur serveur",
-    });
+  const { firstName, lastName, email, phoneNumber, messageObject, message } = req.body;
+  if (![firstName, lastName, email, message].every((value) =>
+    typeof value === "string" && value.trim()
+  )) {
+    throw new ApiError(400, "Prénom, nom, email et message sont requis");
   }
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!emailPattern.test(normalizedEmail)) throw new ApiError(400, "Adresse email invalide");
+
+  const created = await Message.create({
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    email: normalizedEmail,
+    phoneNumber: typeof phoneNumber === "string" ? phoneNumber.trim() : "",
+    messageObject: typeof messageObject === "string" ? messageObject.trim() : "",
+    message: message.trim(),
+  });
+  res.status(201).json({ success: true, message: "Message envoyé", data: created });
 };
 
 exports.getMessages = async (req, res) => {
-  try {
-    const messages = await Message.find().sort({ createdAt: -1 });
-    res.status(200).json({
-      success: true,
-      data: messages,
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération des messages :", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Erreur serveur",
-    });
+  const filter = {};
+  if (req.query.status) {
+    if (!["new", "read", "closed"].includes(req.query.status)) {
+      throw new ApiError(400, "Statut de message invalide");
+    }
+    filter.status = req.query.status;
   }
+  const messages = await Message.find(filter).sort({ createdAt: -1 }).lean();
+  res.json({ success: true, data: messages });
+};
+
+exports.updateMessageStatus = async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new ApiError(400, "Identifiant message invalide");
+  const { status } = req.body;
+  if (!["new", "read", "closed"].includes(status)) throw new ApiError(400, "Statut de message invalide");
+  const message = await Message.findByIdAndUpdate(
+    req.params.id,
+    { $set: { status } },
+    { new: true, runValidators: true }
+  );
+  if (!message) throw new ApiError(404, "Message introuvable");
+  res.json({ success: true, data: message });
+};
+
+exports.deleteMessage = async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) throw new ApiError(400, "Identifiant message invalide");
+  const message = await Message.findByIdAndDelete(req.params.id);
+  if (!message) throw new ApiError(404, "Message introuvable");
+  res.json({ success: true, message: "Message supprimé", id: message._id });
 };

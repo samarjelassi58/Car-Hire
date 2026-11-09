@@ -1,0 +1,318 @@
+{
+  "info": {
+    "_postman_id": "c1b33b9c-9c3d-4c33-9b26-9f75e5c4d731",
+    "name": "Car Hire API - Full backend tests",
+    "description": "Postman Collection v2.1. Import, set adminEmail/adminPassword, start the API and MongoDB, then run the collection sequentially with Collection Runner. The run creates and cleans up a test client, car, reservation, and message. The image upload request requires choosing an image file manually.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "adminEmail", "value": "", "type": "string" },
+    { "key": "adminPassword", "value": "", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "clientToken", "value": "", "type": "string" },
+    { "key": "clientEmail", "value": "", "type": "string" },
+    { "key": "clientPassword", "value": "ClientPass123!", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" },
+    { "key": "carId", "value": "", "type": "string" },
+    { "key": "reservationId", "value": "", "type": "string" },
+    { "key": "messageId", "value": "", "type": "string" },
+    { "key": "startDate", "value": "", "type": "string" },
+    { "key": "endDate", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "01 - Health",
+      "item": [
+        {
+          "name": "Health check (200, database connected)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/health" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('API and MongoDB are ready', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().database).to.eql('connected'); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "02 - Authentication",
+      "item": [
+        {
+          "name": "Login admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Email\": \"{{adminEmail}}\",\n  \"Password\": \"{{adminPassword}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin login succeeds and does not expose password', function () { pm.response.to.have.status(200); var data = pm.response.json(); pm.expect(data.token).to.be.a('string'); pm.expect(data.user.Password).to.be.undefined; pm.collectionVariables.set('adminToken', data.token); });"] } }]
+        },
+        {
+          "name": "Verify admin token",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/auth/verify" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Token is valid', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().user.role).to.eql('admin'); });"] } }]
+        },
+        {
+          "name": "Login with wrong password (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Email\": \"{{adminEmail}}\",\n  \"Password\": \"wrong-password\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Invalid credentials are rejected', function () { pm.response.to.have.status(401); });"] } }]
+        },
+        {
+          "name": "Verify without token (401)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/auth/verify" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Authentication is required', function () { pm.response.to.have.status(401); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "03 - Client accounts",
+      "item": [
+        {
+          "name": "Register test client (201; role cannot be admin)",
+          "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('clientEmail', 'postman.' + Date.now() + '@example.test');"] } }, { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client account is created without privilege escalation', function () { pm.response.to.have.status(201); var data = pm.response.json(); pm.expect(data.user.role).to.eql('client'); pm.expect(data.user.Password).to.be.undefined; pm.collectionVariables.set('clientId', data.user._id || data.user.id); });"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"FirstName\": \"Postman\",\n  \"LastName\": \"Client\",\n  \"Phone\": \"+216 20 000 001\",\n  \"Email\": \"{{clientEmail}}\",\n  \"Password\": \"{{clientPassword}}\",\n  \"role\": \"admin\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/user/createUser"
+          }
+        },
+        {
+          "name": "Reject duplicate client email (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"FirstName\": \"Duplicate\",\n  \"LastName\": \"Client\",\n  \"Phone\": \"20000002\",\n  \"Email\": \"{{clientEmail}}\",\n  \"Password\": \"ClientPass123!\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/user/createUser"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Duplicate email is rejected', function () { pm.response.to.have.status(409); });"] } }]
+        },
+        {
+          "name": "Login test client",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Email\": \"{{clientEmail}}\",\n  \"Password\": \"{{clientPassword}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client login succeeds', function () { pm.response.to.have.status(200); var data = pm.response.json(); pm.expect(data.user.role).to.eql('client'); pm.collectionVariables.set('clientToken', data.token); });"] } }]
+        },
+        {
+          "name": "List clients (admin)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/user" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can list client accounts', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data).to.be.an('array'); });"] } }]
+        },
+        {
+          "name": "Get test client (admin)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/user/{{clientId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can read a client', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data.Email).to.eql(pm.collectionVariables.get('clientEmail')); });"] } }]
+        },
+        {
+          "name": "Update test client (admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"Phone\": \"+216 20 000 009\" }", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/user/{{clientId}}"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can update client contact data', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data.Phone).to.eql('+216 20 000 009'); });"] } }]
+        },
+        {
+          "name": "Client cannot list users (403)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/user" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client is forbidden from user administration', function () { pm.response.to.have.status(403); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "04 - Cars",
+      "item": [
+        {
+          "name": "Create car (admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Postman Test Car\",\n  \"pricePerDay\": 95,\n  \"fuelType\": \"Petrol\",\n  \"category\": \"Compact\",\n  \"tag\": \"postman-test\",\n  \"options\": [\"AC\", \"Bluetooth\"]\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/car/createCar"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin creates a car', function () { pm.response.to.have.status(201); var data = pm.response.json(); pm.expect(data._id).to.be.a('string'); pm.collectionVariables.set('carId', data._id); });"] } }]
+        },
+        {
+          "name": "Client cannot create car (403)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"name\": \"Forbidden car\", \"pricePerDay\": 10 }", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/car/createCar"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client cannot manage cars', function () { pm.response.to.have.status(403); });"] } }]
+        },
+        {
+          "name": "List cars",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/car/getCars" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Car list is public', function () { pm.response.to.have.status(200); pm.expect(pm.response.json()).to.be.an('array'); });"] } }]
+        },
+        {
+          "name": "Filter cars by price",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/car/getCars?minPrice=50&maxPrice=150" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Price filters return valid results', function () { pm.response.to.have.status(200); pm.response.json().forEach(function (car) { pm.expect(car.pricePerDay).to.be.within(50, 150); }); });"] } }]
+        },
+        {
+          "name": "Get test car",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/car/getCar/{{carId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Car details are returned', function () { pm.response.to.have.status(200); pm.expect(pm.response.json()._id).to.eql(pm.collectionVariables.get('carId')); });"] } }]
+        },
+        {
+          "name": "Update test car (admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"pricePerDay\": 99, \"tag\": \"postman-updated\" }", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/car/updateCar/{{carId}}"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin updates car fields', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().pricePerDay).to.eql(99); });"] } }]
+        },
+        {
+          "name": "Upload car image (PNG fixture)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "tests/fixtures/test-car.png" }] },
+            "url": "{{baseUrl}}/api/car/uploadImage"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Allowed image uploads return a public path', function () { pm.response.to.have.status(201); pm.expect(pm.response.json().path).to.include('/uploads/cars/'); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "05 - Reservations",
+      "item": [
+        {
+          "name": "Create reservation (client)",
+          "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["var start = new Date(); start.setUTCDate(start.getUTCDate() + 3); var end = new Date(start); end.setUTCDate(end.getUTCDate() + 3); pm.collectionVariables.set('startDate', start.toISOString().slice(0, 10)); pm.collectionVariables.set('endDate', end.toISOString().slice(0, 10));"] } }, { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Authenticated client creates a reservation', function () { pm.response.to.have.status(201); var data = pm.response.json().data; pm.expect(data.status).to.eql('pending'); pm.collectionVariables.set('reservationId', data._id); });"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"carId\": \"{{carId}}\",\n  \"startDate\": \"{{startDate}}\",\n  \"endDate\": \"{{endDate}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/reservation"
+          }
+        },
+        {
+          "name": "Reject overlapping reservation (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"carId\": \"{{carId}}\",\n  \"startDate\": \"{{startDate}}\",\n  \"endDate\": \"{{endDate}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/reservation"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Overlapping booking is rejected', function () { pm.response.to.have.status(409); });"] } }]
+        },
+        {
+          "name": "List my reservations (client)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/reservation/my" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client sees own bookings', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data).to.be.an('array'); });"] } }]
+        },
+        {
+          "name": "List all reservations (admin)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/reservation" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin sees reservations', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data).to.be.an('array'); });"] } }]
+        },
+        {
+          "name": "Get reservation as owner",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/reservation/{{reservationId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Owner can read own reservation', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Confirm reservation (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"confirmed\" }", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/reservation/{{reservationId}}/status"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin confirms a pending reservation', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data.status).to.eql('confirmed'); });"] } }]
+        },
+        {
+          "name": "Cancel reservation as owner (releases dates)",
+          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/reservation/{{reservationId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Owner cancels reservation', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data.status).to.eql('cancelled'); });"] } }]
+        },
+        {
+          "name": "Client cannot list all reservations (403)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/reservation" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Reservation administration is restricted', function () { pm.response.to.have.status(403); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "06 - Contact messages",
+      "item": [
+        {
+          "name": "Submit contact message",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Postman\",\n  \"lastName\": \"Tester\",\n  \"email\": \"postman@example.test\",\n  \"phoneNumber\": \"+216 20 000 003\",\n  \"messageObject\": \"API test\",\n  \"message\": \"Please ignore this automated test message.\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/message/addMessage"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Contact message is saved', function () { pm.response.to.have.status(201); pm.collectionVariables.set('messageId', pm.response.json().data._id); });"] } }]
+        },
+        {
+          "name": "List messages (admin)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/message/getMessages" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can list contact messages', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data).to.be.an('array'); });"] } }]
+        },
+        {
+          "name": "Client cannot list messages (403)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }], "url": "{{baseUrl}}/api/message/getMessages" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Messages are admin-only', function () { pm.response.to.have.status(403); });"] } }]
+        },
+        {
+          "name": "Close test message (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"closed\" }", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/message/{{messageId}}/status"
+          },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can close a message', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().data.status).to.eql('closed'); });"] } }]
+        },
+        {
+          "name": "Delete test message (admin)",
+          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/message/{{messageId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin can delete a message', function () { pm.response.to.have.status(200); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "07 - Cleanup and logout",
+      "item": [
+        {
+          "name": "Delete test client (admin)",
+          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/user/{{clientId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Test client is removed after its booking is cancelled', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Delete test car (admin)",
+          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/car/deleteCar/{{carId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Test car is removed', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Logout admin",
+          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/auth/logout" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin token is revoked', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Verify revoked token (401)",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }], "url": "{{baseUrl}}/api/auth/verify" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Revoked token cannot be reused', function () { pm.response.to.have.status(401); });"] } }]
+        }
+      ]
+    }
+  ]
+}

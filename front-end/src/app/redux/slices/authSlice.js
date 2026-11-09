@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, loadUserFromToken } from "../thunks/authThunks";
+import { loginUser, logoutUser, loadUserFromToken, SESSION_EXPIRED } from "../thunks/authThunks";
 
 const initialState = {
   user: null,
@@ -8,55 +8,49 @@ const initialState = {
   error: null,
 };
 
+const clearSession = (state) => {
+  state.user = null;
+  state.token = null;
+};
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Permet de réinitialiser les erreurs
     clearAuthError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // 🔐 Lorsqu'on lance la connexion
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-
-      // ✅ Connexion réussie
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
       })
-
-      // ❌ Connexion échouée
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-
-      // 🚪 Déconnexion réussie
       .addCase(logoutUser.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
+        clearSession(state);
         state.loading = false;
       })
-
-      // ❌ Échec déconnexion
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.error = action.payload;
+      .addCase(logoutUser.rejected, (state) => {
+        clearSession(state);
+        state.loading = false;
       })
       .addCase(loadUserFromToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = localStorage.getItem("token");
       })
-
-      .addCase(loadUserFromToken.rejected, (state) => {
-        state.user = null;
-        state.token = null;
+      .addCase(loadUserFromToken.rejected, (state, action) => {
+        // Une panne réseau ne doit pas déconnecter l'utilisateur.
+        if (action.payload === SESSION_EXPIRED) clearSession(state);
       });
   },
 });

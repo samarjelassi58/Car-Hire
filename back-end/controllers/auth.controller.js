@@ -1,51 +1,31 @@
 const { authenticate } = require("../services/auth.service");
 const { addToBlacklist } = require("../utils/tokenManager");
-const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
   const { Email, Password } = req.body;
 
-  try {
-    const { token, user } = await authenticate(Email, Password);
-
-    res.status(200).json({
-      success: true,
-      token: `${token}`,
-      user: user,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({
-      success: false,
-      message: error.message,
-    });
+  if (!Email || !Password) {
+    return res.status(400).json({ success: false, message: "Email et mot de passe requis" });
   }
+
+  const result = await authenticate(Email, Password);
+  if (!result) {
+    return res.status(401).json({ success: false, message: "Identifiants invalides" });
+  }
+
+  res.status(200).json({
+    success: true,
+    token: result.token,
+    user: result.user,
+  });
 };
 
 exports.logout = async (req, res) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(400).json({
-      success: false,
-      message: "Aucun token fourni",
-    });
+  try {
+    await addToBlacklist(req.token, req.tokenPayload.exp * 1000);
+    res.status(200).json({ success: true, message: "Déconnexion réussie" });
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    res.status(500).json({ success: false, message: "Déconnexion impossible" });
   }
-
-  const token = authHeader.split(" ")[1];
-
-  const decoded = jwt.decode(token);
-  if (!decoded || !decoded.exp) {
-    return res.status(400).json({
-      success: false,
-      message: "Token invalide",
-    });
-  }
-
-  const expiresAt = decoded.exp * 1000;
-  addToBlacklist(token, expiresAt);
-  res.status(200).json({
-    success: true,
-    message: "Déconnexion réussie",
-  });
 };

@@ -2,8 +2,8 @@ import AdminLayout from "../../components/AdminLayout";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCar, getCars, updateCar, deleteCar, uploadCarImage } from "../../app/redux/thunks/carThunks";
-import { CAR_API } from "../../app/utils/api";
-import { clearCarError } from "../../app/redux/slies/carSlice";
+import { imageUrl } from "../../app/utils/api";
+import { clearCarError } from "../../app/redux/slices/carSlice";
 
 const emptyForm = {
   name: "",
@@ -17,7 +17,7 @@ const emptyForm = {
 
 const Cars = () => {
   const dispatch = useDispatch();
-  const { list, loading, error, current } = useSelector((s) => s.car || { list: [], loading: false, error: null });
+  const { list, loading, error } = useSelector((s) => s.car || { list: [], loading: false, error: null });
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -54,21 +54,24 @@ const Cars = () => {
     // If an image file was selected, upload it first and use returned path
     if (imageFile) {
       const uploadRes = await dispatch(uploadCarImage(imageFile));
-      if (uploadRes.payload && uploadRes.payload.path) {
-        payload.image = uploadRes.payload.path;
+      if (!uploadCarImage.fulfilled.match(uploadRes)) {
+        window.alert(uploadRes.payload || "Échec de l'envoi de l'image");
+        return;
       }
+      payload.image = uploadRes.payload.path;
     }
 
-    if (editMode && form._id) {
-      await dispatch(updateCar({ id: form._id, update: payload }));
-    } else {
-      await dispatch(createCar(payload));
-    }
+    const result =
+      editMode && form._id
+        ? await dispatch(updateCar({ id: form._id, update: payload }))
+        : await dispatch(createCar(payload));
+    if (result.error) return;
 
     setForm(emptyForm);
     setEditMode(false);
     setShowForm(false);
     setImageFile(null);
+    setImagePreview(null);
   };
 
   const onEdit = (car) => {
@@ -110,7 +113,7 @@ const Cars = () => {
         </button>
       </div>
 
-      {error && <div className="mb-4 text-red-600">{JSON.stringify(error)}</div>}
+      {error && <div role="alert" className="mb-4 text-red-600">{error}</div>}
 
       {showForm && (
         <form onSubmit={onSubmit} className="mb-6 bg-white p-4 rounded shadow">
@@ -220,17 +223,10 @@ const Cars = () => {
               </tr>
             )}
             {list.map((car) => {
-              // compute image url (if stored as a public path like /uploads/...)
-              const backendOrigin = CAR_API.replace("/api/car", "");
-              const imageUrl = car.image && (car.image.startsWith("http") ? car.image : `${backendOrigin}${car.image}`);
               return (
                 <tr key={car._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {imageUrl ? (
-                      <img src={imageUrl} alt={car.name} className="h-16 w-24 object-cover rounded" />
-                    ) : (
-                      <div className="h-16 w-24 bg-gray-100 flex items-center justify-center text-gray-400">No image</div>
-                    )}
+                    <img src={imageUrl(car.image)} alt={car.name} className="h-16 w-24 object-cover rounded" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{car.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{car.pricePerDay}</td>

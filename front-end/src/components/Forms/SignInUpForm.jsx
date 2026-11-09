@@ -1,5 +1,5 @@
 import { useState ,  useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../app/redux/thunks/userThunks";
 import { loginUser } from "../../app/redux/thunks/authThunks";
@@ -10,7 +10,8 @@ export default function SignInpForm() {
   const [isSignIn, setIsSignIn] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const redirectTo = location.state?.from || "/";
 
 
   // Sélection des états pour inscription et connexion
@@ -24,7 +25,6 @@ export default function SignInpForm() {
     Email: "",
     Phone: "",
     Password: "",
-    role: "client",
   });
 
   const toggleForm = () => {
@@ -35,7 +35,6 @@ export default function SignInpForm() {
       Email: "",
       Phone: "",
       Password: "",
-      role: "client",
     });
   };
 
@@ -71,11 +70,11 @@ export default function SignInpForm() {
       // Navigate immediately after login
       if (role === "admin") {
         navigate("/dashboard");
-      } else if (role === "client") {
-        navigate("/");
+      } else {
+        navigate(redirectTo, { replace: true });
       }
     }
-  }, [authState.user, navigate]);
+  }, [authState.user, navigate, redirectTo]);
 
   // Watch for success / error to show alerts
   useEffect(() => {
@@ -205,6 +204,7 @@ export default function SignInpForm() {
                 id="Password"
                 name="Password"
                 type="password"
+                minLength={isSignIn ? undefined : 8}
                 value={formData.Password}
                 onChange={handleChange}
                 required

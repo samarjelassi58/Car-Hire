@@ -1,12 +1,33 @@
-# React + Vite
+# Car Hire : frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface React avec Vite, Redux Toolkit et React Router. Elle communique avec l'API du dossier [back-end](../back-end/README.md).
 
-Currently, two official plugins are available:
+## Démarrage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Depuis `front-end`, dans un terminal PowerShell :
 
-## Expanding the ESLint configuration
+```powershell
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ouvrir l'adresse affichée par Vite, généralement `http://localhost:5173`. Le backend et MongoDB doivent être démarrés pour les fonctions liées aux données.
+
+L'API est par défaut `http://localhost:5000`. Pour utiliser une autre adresse, copier `.env.example` vers `.env` et modifier `VITE_API_URL`. Configurer aussi `CORS_ORIGINS` côté backend si l'origine du frontend change.
+
+## Parcours
+
+- Le visiteur peut consulter les voitures et envoyer un message.
+- Le client connecté retrouve ses réservations et leur statut via **My Reservations** ; le bouton **Nouvelle réservation** permet d'en créer une.
+- L'administrateur accède au tableau de bord pour gérer voitures, clients, réservations et messages.
+
+## Vérifications
+
+Depuis `front-end` :
+
+```powershell
+npm run lint
+npm run build
+```
+
+Ces commandes vérifient le code et la compilation ; elles ne remplacent pas les tests navigateur. Pour exécuter les parcours avec Chrome, suivre le [guide Selenium](../e2e/README.md).

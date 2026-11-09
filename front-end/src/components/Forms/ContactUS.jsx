@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../../app/redux/thunks/messageThunks';
+import { clearMessageFeedback } from '../../app/redux/slices/messageSlice';
 import SuccessAlert from '../Alerts/SuccessAlert';
 import FailureAlert from '../Alerts/FailureAlert';
 
@@ -22,8 +23,12 @@ export default function ContactUS() {
   const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
+    dispatch(clearMessageFeedback());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (messageState.success) {
-      setAlertMessage(typeof messageState.success === 'string' ? messageState.success : (messageState?.message || 'Message envoyé avec succès'));
+      setAlertMessage('Message envoyé avec succès');
       setShowSuccess(true);
       // reset form
       setForm({ firstName: '', lastName: '', email: '', phoneNumber: '', messageObject: '', message: '' });

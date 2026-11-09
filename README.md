@@ -1,156 +1,76 @@
-# Car Hire - Application de Location de Voitures
+# Car Hire
 
-Une application web complète pour la gestion de location de voitures, développée avec Node.js et React.
+Application de location de voitures avec un catalogue, des réservations, un formulaire de contact et un espace administrateur.
 
-## 🚗 Fonctionnalités
+Le projet est un **monolithe modulaire** : un frontend React et une API Express partagent une base MongoDB.
 
-- **Authentification des utilisateurs** (inscription/connexion)
-- **Gestion des voitures** (ajout, modification, suppression)
-- **Système de réservation** en ligne
-- **Interface d'administration** pour la gestion
-- **Profils utilisateurs** personnalisés
-- **Système de messages/contact**
+## Fonctionnalités
 
-## 🏗️ Architecture du Projet
+- Visiteur : consulter et filtrer les voitures, créer un compte et envoyer un message.
+- Client connecté : réserver une voiture, consulter le statut de ses réservations et les annuler.
+- Administrateur : gérer les voitures, les clients, les réservations et les messages.
 
-Le projet est structuré en deux parties principales :
+## Prérequis
 
-### Backend (`/back-end`)
+- Node.js et npm, MongoDB local ou Atlas.
+- Pour les tests Selenium : Python 3, Google Chrome et les dépendances indiquées dans le [guide des tests E2E](./e2e/README.md).
+- Postman, facultatif, pour exécuter la collection API depuis une interface graphique.
 
-- **Framework** : Node.js avec Express
-- **Base de données** : MongoDB (avec Mongoose)
-- **Authentification** : JWT (JSON Web Tokens)
-- **Architecture** : MVC (Model-View-Controller)
+## Installation et démarrage sous Windows
 
-### Frontend (`/front-end`)
+Ouvrir le dossier du projet dans VS Code, puis utiliser deux terminaux PowerShell.
 
-- **Framework** : React avec Vite
-- **Gestion d'état** : Redux Toolkit
-- **Styling** : CSS moderne
-- **Routing** : React Router
+### 1. Backend
 
-## 📦 Installation
+Depuis la racine du projet :
 
-### Prérequis
-
-- Node.js (version 14 ou supérieure)
-- npm ou yarn
-- MongoDB
-
-### Installation du Backend
-
-```bash
+```powershell
 cd back-end
 npm install
+Copy-Item .env.example .env
 ```
 
-### Installation du Frontend
+Modifier `back-end\.env` : renseigner notamment `MONGO_URI`, `JWT_SECRET` et les variables `ADMIN_*`. Consulter le [guide backend](./back-end/README.md) pour leur signification. Démarrer MongoDB, puis créer l'administrateur **une seule fois** :
 
-```bash
-cd front-end
-npm install
-```
-
-## 🚀 Démarrage
-
-### Démarrer le serveur backend
-
-```bash
-cd back-end
-npm start
-```
-
-### Démarrer l'application frontend
-
-```bash
-cd front-end
+```powershell
+npm run create-admin
 npm run dev
 ```
 
-## 📂 Structure du Projet
+Si l'administrateur existe déjà, ne pas relancer sa création. Laisser ce terminal ouvert. L'API est disponible par défaut sur `http://localhost:5000` ; vérifier `http://localhost:5000/api/health`.
 
-```
-car-hire/
-├── back-end/
-│   ├── config/          # Configuration de la base de données
-│   ├── controllers/     # Contrôleurs de l'API
-│   ├── middlewares/     # Middlewares (auth, roles)
-│   ├── models/          # Modèles Mongoose
-│   ├── routes/          # Routes de l'API
-│   ├── services/        # Services métier
-│   └── utils/           # Utilitaires
-└── front-end/
-    ├── src/
-    │   ├── app/         # Configuration Redux
-    │   ├── components/  # Composants réutilisables
-    │   ├── pages/       # Pages de l'application
-    │   └── utils/       # Utilitaires frontend
-    └── public/          # Fichiers statiques
+### 2. Frontend
+
+Dans un nouveau terminal, depuis la racine du projet :
+
+```powershell
+cd front-end
+npm install
+npm run dev
 ```
 
-## 🔧 Configuration
+Ouvrir l'adresse affichée par Vite, généralement `http://localhost:5173`, et laisser ce terminal ouvert. Voir le [guide frontend](./front-end/README.md).
 
-1. Créez un fichier `.env` dans le dossier `back-end` :
+## Tests
 
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/car-hire
-JWT_SECRET=votre_jwt_secret_ici
-JWT_EXPIRE=7d
+| Vérification | Comment la lancer |
+|---|---|
+| Parcours navigateur Selenium | [Guide pas à pas E2E](./e2e/README.md), tous les tests ou un fichier |
+| API avec Postman | [Guide backend : tests API](./back-end/README.md#tests-dapi-avec-postman) |
+| Tests unitaires backend | `npm test` depuis `back-end` |
+| Vérification et compilation frontend | `npm run lint` et `npm run build` depuis `front-end` |
+
+Les tests E2E et API écrivent dans la base et tentent de nettoyer leurs données ; utiliser une **base de test dédiée**, jamais une base de production. Une interruption ou un échec peut laisser des données de test.
+
+## Structure
+
+```text
+Car-Hire/
+├── back-end/     API, modèles MongoDB, scripts et collection Postman
+├── front-end/    Interface React
+└── e2e/          Tests Selenium, objets de page et configuration pytest
 ```
 
-2. Configurez votre base de données MongoDB
-3. Démarrez les deux serveurs (backend et frontend)
+## Sécurité
 
-## 🛠️ Technologies Utilisées
-
-### Backend
-
-- Node.js
-- Express.js
-- MongoDB & Mongoose
-- JWT pour l'authentification
-- bcryptjs pour le hashage des mots de passe
-
-### Frontend
-
-- React 18
-- Redux Toolkit
-- React Router
-- Vite (bundler)
-- CSS moderne
-
-## 👥 Fonctionnalités Utilisateur
-
-- **Clients** : Peuvent parcourir les voitures, faire des réservations, gérer leur profil
-- **Administrateurs** : Gestion complète des voitures, utilisateurs, réservations et messages
-
-## 📱 Pages Disponibles
-
-- **Accueil** : Présentation du service
-- **Voitures** : Catalogue des véhicules disponibles
-- **À propos** : Informations sur l'entreprise
-- **Contact** : Formulaire de contact
-- **Connexion/Inscription** : Authentification des utilisateurs
-- **Réservation** : Processus de réservation
-- **Admin Dashboard** : Interface d'administration
-
-## 🤝 Contribution
-
-1. Forkez le projet
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Poussez vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 👨‍💻 Auteur
-
-**[Votre Nom]** - _Développeur Full Stack_
-
-## 📞 Support
-
-Pour toute question ou support, veuillez ouvrir une issue dans ce dépôt.
+Ne partagez ni ne versionnez les fichiers `.env`, les jetons ou les rapports contenant des données sensibles. Utilisez un `JWT_SECRET` aléatoire d'au moins 32 caractères et des identifiants propres à votre environnement. Ne publiez pas les identifiants de test.

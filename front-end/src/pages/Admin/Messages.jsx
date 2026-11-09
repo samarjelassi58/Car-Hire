@@ -1,8 +1,9 @@
 import AdminLayout from "../../components/AdminLayout";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMessages } from "../../app/redux/thunks/messageThunks";
+import { fetchMessages, updateMessageStatus, deleteMessage } from "../../app/redux/thunks/messageThunks";
 
+const STATUS_LABELS = { new: "Nouveau", read: "Lu", closed: "Clôturé" };
 
 const Avatar = ({ firstName = "", lastName = "" }) => {
   const initials = `${(firstName[0] || "").toUpperCase()}${(lastName[0] || "").toUpperCase()}`.trim() || "U";
@@ -96,7 +97,41 @@ const Messages = () => {
                   </div>
                 </div>
 
-
+                <div className="mt-4 flex items-center justify-between text-sm">
+                  <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                    {STATUS_LABELS[m.status] || m.status}
+                  </span>
+                  <div className="space-x-3 font-medium">
+                    <button
+                      onClick={() => setExpandedId(isExpanded ? null : id)}
+                      className="text-indigo-600 hover:underline"
+                    >
+                      {isExpanded ? "Réduire" : "Lire"}
+                    </button>
+                    {m.status !== "read" && (
+                      <button
+                        onClick={() => dispatch(updateMessageStatus({ id, status: "read" }))}
+                        className="text-green-700 hover:underline"
+                      >
+                        Marquer lu
+                      </button>
+                    )}
+                    {m.status !== "closed" && (
+                      <button
+                        onClick={() => dispatch(updateMessageStatus({ id, status: "closed" }))}
+                        className="text-gray-700 hover:underline"
+                      >
+                        Clôturer
+                      </button>
+                    )}
+                    <button
+                      onClick={() => window.confirm("Supprimer ce message ?") && dispatch(deleteMessage(id))}
+                      className="text-red-600 hover:underline"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
               </article>
             );
           })}
