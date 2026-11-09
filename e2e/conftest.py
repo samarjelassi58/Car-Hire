@@ -156,7 +156,7 @@ def login(driver):
 @pytest.fixture
 def login_client(login, client_user):
     page = login(client_user["email"], client_user["password"])
-    assert page.nav_link_visible("My Reservations"), "La connexion client a échoué"
+    assert page.nav_link_visible("Mes réservations"), "La connexion client a échoué"
     return client_user
 
 

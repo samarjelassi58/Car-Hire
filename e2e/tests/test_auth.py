@@ -9,18 +9,18 @@ pytestmark = pytest.mark.auth
 @pytest.mark.smoke
 def test_login_page_displays_sign_in_form(driver):
     page = LoginPage(driver).open()
-    assert page.heading() == "Sign In"
+    assert page.heading() == "Connexion"
 
 
 def test_client_can_log_in_and_sees_client_navigation(driver, client_user, login):
     page = login(client_user["email"], client_user["password"])
-    assert page.nav_link_visible("My Reservations")
-    assert not page.nav_link_visible("Dashboard", timeout=1)
+    assert page.nav_link_visible("Mes réservations")
+    assert not page.nav_link_visible("Tableau de bord", timeout=1)
 
 
 def test_admin_is_redirected_to_dashboard(driver, login_admin):
     BasePage(driver).wait_for_path("/dashboard")
-    assert BasePage(driver).text_visible("Administration Zone")
+    assert BasePage(driver).text_visible("Espace d'administration")
 
 
 def test_invalid_credentials_show_an_error(driver, client_user):
@@ -56,8 +56,8 @@ def test_signup_rejects_duplicate_email(driver, client_user):
 def test_logout_returns_to_anonymous_navigation(driver, login_client):
     page = BasePage(driver)
     page.logout()
-    assert page.nav_link_visible("Login")
-    assert not page.nav_link_visible("My Reservations", timeout=1)
+    assert page.nav_link_visible("Connexion")
+    assert not page.nav_link_visible("Mes réservations", timeout=1)
 
 
 @pytest.mark.smoke

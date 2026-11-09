@@ -11,7 +11,7 @@ const Footer = () => (
       <div>
         <h2 className="text-sm font-bold uppercase tracking-widest text-white">Navigation</h2>
         <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-          {[["Home", "/"], ["About", "/about"], ["Our Cars", "/cars"], ["Reservation", "/reservation"], ["Contact", "/contact"]].map(([label, path]) => (
+          {[["Accueil", "/"], ["À propos", "/about"], ["Nos voitures", "/cars"], ["Réservation", "/reservation"], ["Contact", "/contact"]].map(([label, path]) => (
             <Link key={path} to={path} className="hover:text-white">{label}</Link>
           ))}
         </div>

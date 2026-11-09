@@ -18,7 +18,7 @@ const Login = () => {
           <div className="hidden md:block">
             <img
               src="/images/login.svg"
-              alt="Login illustration"
+              alt="Illustration de connexion"
               className="w-full h-auto object-contain"
             />
           </div>

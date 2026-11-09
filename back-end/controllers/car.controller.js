@@ -6,6 +6,7 @@ const Reservation = require("../models/Reservations");
 const ApiError = require("../utils/ApiError");
 
 const editableFields = ["name", "pricePerDay", "fuelType", "transmission", "category", "tag", "options", "image"];
+const fieldLabels = { fuelType: "Le carburant", transmission: "La transmission", category: "La catégorie", tag: "L'étiquette", image: "L'image" };
 const uploadsDir = path.resolve(__dirname, "..", "uploads", "cars");
 
 const validateId = (id) => {
@@ -38,24 +39,24 @@ const buildCarData = (body, isUpdate = false) => {
     if (body[field] !== undefined) data[field] = body[field];
   }
   if (!isUpdate && (!data.name || data.pricePerDay === undefined)) {
-    throw new ApiError(400, "name et pricePerDay sont requis");
+    throw new ApiError(400, "Le nom et le prix par jour sont requis");
   }
   if (data.name !== undefined) {
-    if (typeof data.name !== "string" || !data.name.trim()) throw new ApiError(400, "name est invalide");
+    if (typeof data.name !== "string" || !data.name.trim()) throw new ApiError(400, "Le nom est invalide");
     data.name = data.name.trim();
   }
   if (data.pricePerDay !== undefined) {
     if (data.pricePerDay === null || (typeof data.pricePerDay === "string" && !data.pricePerDay.trim())) {
-      throw new ApiError(400, "pricePerDay est requis et doit être un nombre");
+      throw new ApiError(400, "Le prix par jour est requis et doit être un nombre");
     }
     data.pricePerDay = Number(data.pricePerDay);
     if (!Number.isFinite(data.pricePerDay) || data.pricePerDay < 0) {
-      throw new ApiError(400, "pricePerDay doit être un nombre positif ou nul");
+      throw new ApiError(400, "Le prix par jour doit être un nombre positif ou nul");
     }
   }
   for (const field of ["fuelType", "transmission", "category", "tag", "image"]) {
     if (data[field] !== undefined && typeof data[field] !== "string") {
-      throw new ApiError(400, `${field} doit être une chaîne de caractères`);
+      throw new ApiError(400, `${fieldLabels[field]} doit être une chaîne de caractères`);
     }
     if (typeof data[field] === "string") data[field] = data[field].trim();
   }

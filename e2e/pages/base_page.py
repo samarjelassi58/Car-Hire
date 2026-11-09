@@ -99,9 +99,9 @@ class BasePage:
         return (By.XPATH, f"//{tag}[contains(., {self._xpath_literal(text)})]")
 
     def logout(self):
-        """La navbar contient un bouton Logout desktop et un mobile : on clique le visible."""
+        """Clique sur le bouton de déconnexion visible."""
         def visible_logout(driver):
-            for btn in driver.find_elements(By.XPATH, "//button[normalize-space()='Logout']"):
+            for btn in driver.find_elements(By.XPATH, "//button[normalize-space()='Déconnexion']"):
                 if btn.is_displayed():
                     return btn
             return False

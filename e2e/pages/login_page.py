@@ -21,7 +21,7 @@ class LoginPage(BasePage):
 
     def switch_to_signup(self):
         self.click(self.TOGGLE)
-        self.wait.until(lambda d: self.heading() == "Sign Up")
+        self.wait.until(lambda d: self.heading() == "Inscription")
         return self
 
     def sign_up(self, first, last, email, phone, password):

@@ -79,7 +79,7 @@ export default function SignInpForm() {
   // Watch for success / error to show alerts
   useEffect(() => {
     if (success) {
-      setAlertMessage(typeof success === 'string' ? success : 'Account created successfully!');
+      setAlertMessage(typeof success === 'string' ? success : 'Compte créé avec succès !');
       setShowSuccess(true);
       // auto-dismiss
       const t = setTimeout(() => setShowSuccess(false), 4000);
@@ -91,7 +91,7 @@ export default function SignInpForm() {
 
   useEffect(() => {
     if (error) {
-      setAlertMessage(typeof error === 'string' ? error : 'An error occurred');
+      setAlertMessage(typeof error === 'string' ? error : 'Une erreur est survenue');
       setShowFailure(true);
       const t = setTimeout(() => setShowFailure(false), 5000);
       return () => clearTimeout(t);
@@ -102,10 +102,10 @@ export default function SignInpForm() {
     <div className="isolate bg-slate-50 px-6 py-24 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-          {isSignIn ? "Sign In" : "Sign Up"}
+          {isSignIn ? "Connexion" : "Inscription"}
         </h2>
         <p className="mt-2 text-lg text-gray-600">
-          {isSignIn ? "Access your account" : "Create your account to get started"}
+          {isSignIn ? "Accédez à votre compte" : "Créez votre compte pour commencer"}
         </p>
       </div>
 
@@ -125,7 +125,7 @@ export default function SignInpForm() {
             <>
               <div>
                 <label htmlFor="FirstName" className="block text-sm font-semibold text-gray-900">
-                  First Name
+                  Prénom
                 </label>
                 <div className="mt-2.5">
                   <input
@@ -141,7 +141,7 @@ export default function SignInpForm() {
               </div>
               <div>
                 <label htmlFor="LastName" className="block text-sm font-semibold text-gray-900">
-                  Last Name
+                  Nom
                 </label>
                 <div className="mt-2.5">
                   <input
@@ -160,7 +160,7 @@ export default function SignInpForm() {
 
           <div className="sm:col-span-2">
             <label htmlFor="Email" className="block text-sm font-semibold text-gray-900">
-              Email
+              Adresse e-mail
             </label>
             <div className="mt-2.5">
               <input
@@ -178,7 +178,7 @@ export default function SignInpForm() {
           {!isSignIn && (
             <div className="sm:col-span-2">
               <label htmlFor="Phone" className="block text-sm font-semibold text-gray-900">
-                Phone Number
+                Numéro de téléphone
               </label>
               <div className="mt-2.5">
                 <input
@@ -197,7 +197,7 @@ export default function SignInpForm() {
 
           <div className="sm:col-span-2">
             <label htmlFor="Password" className="block text-sm font-semibold text-gray-900">
-              Password
+              Mot de passe
             </label>
             <div className="mt-2.5">
               <input
@@ -219,20 +219,20 @@ export default function SignInpForm() {
             type="submit"
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
           >
-            {isSignIn ? (loading ? "Signing In..." : "Sign In") : loading ? "Creating..." : "Sign Up"}
+            {isSignIn ? (loading ? "Connexion..." : "Se connecter") : loading ? "Création..." : "S'inscrire"}
           </button>
         </div>
 
-        {loading && <p className="mt-4 text-center text-blue-500">Processing...</p>}
+        {loading && <p className="mt-4 text-center text-blue-500">Traitement en cours...</p>}
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
+          {isSignIn ? "Vous n'avez pas de compte ?" : "Vous avez déjà un compte ?"}{" "}
           <button
             type="button"
             onClick={toggleForm}
             className="font-semibold text-indigo-600 hover:text-indigo-500 underline"
           >
-            {isSignIn ? "Sign Up" : "Sign In"}
+            {isSignIn ? "S'inscrire" : "Se connecter"}
           </button>
         </p>
       </form>

@@ -4,19 +4,19 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 const aboutFeatures = [
   {
-    title: "Wide Selection",
+    title: "Un large choix",
     description:
-      "From compact cars to luxury SUVs — we provide vehicles for every style, occasion, and budget.",
+      "Des citadines aux SUV, découvrez des véhicules adaptés à vos besoins.",
   },
   {
-    title: "24/7 Support",
+    title: "À votre écoute",
     description:
-      "Our dedicated support team is available around the clock to assist with bookings and issues.",
+      "Notre équipe répond à vos questions sur les réservations.",
   },
   {
-    title: "Affordable Pricing",
+    title: "Des tarifs accessibles",
     description:
-      "Clear and transparent pricing with no hidden fees — just great cars at great rates.",
+      "Consultez les tarifs de location avant de choisir votre véhicule.",
   },
 ];
 
@@ -29,10 +29,10 @@ const About = () => {
       <section className="bg-slate-50 px-4 pb-20 pt-32 text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            About <span className="text-indigo-600">CarHire</span>
+            À propos de <span className="text-indigo-600">CarHire</span>
           </h1>
           <p className="mt-6 text-xl md:text-2xl text-gray-600 leading-relaxed">
-            We simplify your journey by offering top-notch vehicles, unmatched customer support, and pricing you can trust.
+            Nous simplifions vos déplacements grâce à une sélection de véhicules et un service de réservation en ligne.
           </p>
         </div>
       </section>
@@ -41,10 +41,9 @@ const About = () => {
       <section className="py-2 bg-white px-4">
         <div className="max-w-5xl mx-auto">
           <div className="rounded-3xl bg-slate-950 p-8 text-white sm:p-12">
-            <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+            <h2 className="text-3xl font-bold mb-6">Notre mission</h2>
             <p className="text-lg md:text-xl leading-relaxed">
-              At CarHire, our goal is to empower your travels. Whether you're commuting, vacationing, or exploring — we deliver
-              the flexibility and freedom you need, backed by reliability and care.
+              Chez CarHire, nous vous aidons à trouver une voiture adaptée à vos déplacements, vos vacances et vos découvertes.
             </p>
           </div>
         </div>
@@ -55,10 +54,10 @@ const About = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Us?
+              Pourquoi choisir CarHire ?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We go the extra mile to make your car rental experience seamless
+              Une expérience de location pensée pour vous simplifier la vie.
             </p>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

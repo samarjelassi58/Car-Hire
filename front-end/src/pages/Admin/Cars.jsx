@@ -90,7 +90,7 @@ const Cars = () => {
   };
 
   const onDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this car?")) return;
+    if (!confirm("Voulez-vous vraiment supprimer cette voiture ?")) return;
     await dispatch(deleteCar(id));
   };
 
@@ -98,8 +98,8 @@ const Cars = () => {
     <AdminLayout>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-1">Cars</h2>
-          <p className="text-gray-500 max-w-md">A list of all cars in your fleet.</p>
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-1">Voitures</h2>
+          <p className="text-gray-500 max-w-md">Liste des voitures de votre flotte.</p>
         </div>
         <button
           onClick={() => {
@@ -109,7 +109,7 @@ const Cars = () => {
           }}
           className="mt-4 sm:mt-0 bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-indigo-700 transition"
         >
-          {showForm ? "Close" : "Add a Car"}
+          {showForm ? "Fermer" : "Ajouter une voiture"}
         </button>
       </div>
 
@@ -119,33 +119,33 @@ const Cars = () => {
         <form onSubmit={onSubmit} className="mb-6 bg-white p-4 rounded shadow">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">Nom</label>
               <input name="name" value={form.name} onChange={onChange} className="mt-1 block w-full border rounded p-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Price / day</label>
+              <label className="block text-sm font-medium text-gray-700">Prix par jour</label>
               <input name="pricePerDay" value={form.pricePerDay} onChange={onChange} type="number" className="mt-1 block w-full border rounded p-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Fuel Type</label>
+              <label className="block text-sm font-medium text-gray-700">Carburant</label>
               <input name="fuelType" value={form.fuelType} onChange={onChange} className="mt-1 block w-full border rounded p-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <label className="block text-sm font-medium text-gray-700">Catégorie</label>
               <input name="category" value={form.category} onChange={onChange} className="mt-1 block w-full border rounded p-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tag</label>
+              <label className="block text-sm font-medium text-gray-700">Étiquette</label>
               <input name="tag" value={form.tag} onChange={onChange} className="mt-1 block w-full border rounded p-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Options (comma separated)</label>
+              <label className="block text-sm font-medium text-gray-700">Options (séparées par des virgules)</label>
               <input name="options" value={form.options} onChange={onChange} className="mt-1 block w-full border rounded p-2" />
             </div>
             <div className="sm:col-span-2">
        
               <div className="mt-2 ">
-                  <label className="block text-sm font-medium text-gray-700">Upload image file</label>
+                  <label className="block text-sm font-medium text-gray-700">Ajouter une image</label>
                   <div className="mt-1 flex items-center gap-3">
                     <input
                       ref={fileInputRef}
@@ -168,21 +168,21 @@ const Cars = () => {
                       onClick={() => fileInputRef.current && fileInputRef.current.click()}
                       className="bg-gray-200 px-3 py-1 rounded"
                     >
-                      Choose file
+                      Choisir un fichier
                     </button>
-                    <div className="text-sm text-gray-600">{imageFile ? imageFile.name : "No file chosen"}</div>
+                    <div className="text-sm text-gray-600">{imageFile ? imageFile.name : "Aucun fichier choisi"}</div>
                   </div>
 
                   {imagePreview && (
                     <div className="mt-2">
-                      <img src={imagePreview} alt="preview" className="h-24 w-40 object-cover rounded" />
+                      <img src={imagePreview} alt="Aperçu de l'image" className="h-24 w-40 object-cover rounded" />
                     </div>
                   )}
                 </div>
             </div>
           </div>
           <div className="mt-4 flex gap-2">
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">{editMode ? "Update" : "Create"}</button>
+            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">{editMode ? "Enregistrer" : "Créer"}</button>
             <button
               type="button"
               onClick={() => {
@@ -192,7 +192,7 @@ const Cars = () => {
               }}
               className="bg-gray-200 px-4 py-2 rounded"
             >
-              Cancel
+              Annuler
             </button>
           </div>
         </form>
@@ -203,23 +203,23 @@ const Cars = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Photo</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price/day</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fuel</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tag</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prix par jour</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Catégorie</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Carburant</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Étiquette</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {loading && (
               <tr>
-                <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">Loading...</td>
+                <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">Chargement...</td>
               </tr>
             )}
             {!loading && list.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">No cars found.</td>
+                <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">Aucune voiture trouvée.</td>
               </tr>
             )}
             {list.map((car) => {
@@ -234,8 +234,8 @@ const Cars = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{car.fuelType}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{car.tag}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2 justify-end">
-                    <button onClick={() => onEdit(car)} className="text-indigo-600 hover:text-indigo-900">Edit</button>
-                    <button onClick={() => onDelete(car._id)} className="text-red-600 hover:text-red-900">Delete</button>
+                    <button onClick={() => onEdit(car)} className="text-indigo-600 hover:text-indigo-900">Modifier</button>
+                    <button onClick={() => onDelete(car._id)} className="text-red-600 hover:text-red-900">Supprimer</button>
                   </td>
                 </tr>
               );

@@ -30,8 +30,8 @@ const AdminLayout = ({ children }) => {
 
   const navItems = [
     { name: "Clients", path: "/admin/clients", icon: <Users size={18} /> },
-    { name: "Cars", path: "/admin/cars", icon: <Car size={18} /> },
-    { name: "Reservations", path: "/admin/reservations", icon: <Calendar size={18} /> },
+    { name: "Voitures", path: "/admin/cars", icon: <Car size={18} /> },
+    { name: "Réservations", path: "/admin/reservations", icon: <Calendar size={18} /> },
     { name: "Messages", path: "/admin/messages", icon: <MessageSquare size={18} /> },
   ];
 
@@ -107,7 +107,7 @@ const handleLogout = async () => {
                       transition-all duration-300 hover:shadow-lg hover:gap-3 backdrop-blur-sm"
           >
             <LogOut className="transition-transform duration-300 group-hover:rotate-12" size={18} />
-            <span>Logout</span>
+            <span>Déconnexion</span>
           </button>
         </div>
       </div>
@@ -121,7 +121,7 @@ const handleLogout = async () => {
             className={`p-2 rounded-md focus:outline-none transition-all duration-300
               ${sidebarOpen ? 'bg-indigo-100 text-indigo-600 rotate-90' : 'text-gray-600 hover:text-indigo-600'}`}
             onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
+            aria-label={sidebarOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
             {sidebarOpen ? (
               <X size={24} className="transition-transform duration-500 rotate-180 scale-110" />
@@ -136,7 +136,7 @@ const handleLogout = async () => {
                             transition-transform duration-300 hover:scale-110">
               A
             </div>
-            <span className="font-medium text-gray-700">Admin</span>
+            <span className="font-medium text-gray-700">Administration</span>
           </div>
         </header>
 

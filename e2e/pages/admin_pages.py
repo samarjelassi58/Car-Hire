@@ -7,11 +7,11 @@ from .base_page import BasePage
 class AdminCarsPage(BasePage):
     path = "/admin/cars"
 
-    TOGGLE_FORM = (By.XPATH, "//button[normalize-space()='Add a Car' or normalize-space()='Close']")
+    TOGGLE_FORM = (By.XPATH, "//button[normalize-space()='Ajouter une voiture' or normalize-space()='Fermer']")
     SUBMIT = (By.XPATH, "//form//button[@type='submit']")
 
     def add_car(self, name, price, fuel="Petrol", category="SUV", tag="e2e", options="AC, GPS"):
-        self.click((By.XPATH, "//button[normalize-space()='Add a Car']"))
+        self.click((By.XPATH, "//button[normalize-space()='Ajouter une voiture']"))
         self.type(self.by_name("name"), name)
         self.type(self.by_name("pricePerDay"), str(price))
         self.type(self.by_name("fuelType"), fuel)
@@ -21,12 +21,12 @@ class AdminCarsPage(BasePage):
         self.click(self.SUBMIT)
 
     def edit_car(self, name, new_price):
-        self.click((By.XPATH, f"//tr[contains(., '{name}')]//button[normalize-space()='Edit']"))
+        self.click((By.XPATH, f"//tr[contains(., '{name}')]//button[normalize-space()='Modifier']"))
         self.type(self.by_name("pricePerDay"), str(new_price))
         self.click(self.SUBMIT)
 
     def delete_car(self, name):
-        self.click((By.XPATH, f"//tr[contains(., '{name}')]//button[normalize-space()='Delete']"))
+        self.click((By.XPATH, f"//tr[contains(., '{name}')]//button[normalize-space()='Supprimer']"))
         self.accept_confirm()
 
     def has_car(self, name, timeout=10):

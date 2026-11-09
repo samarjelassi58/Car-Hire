@@ -42,18 +42,18 @@ const Messages = () => {
         <div>
           <h2 className="text-3xl font-extrabold text-gray-900 mb-1">Messages</h2>
           <p className="text-gray-500 max-w-md">
-            All messages submitted by users. Use the search to quickly find a message.
+            Consultez les messages reçus et utilisez la recherche pour les retrouver.
           </p>
         </div>
 
         <div className="w-full sm:w-1/3">
           <label className="relative block">
-            <span className="sr-only">Search messages</span>
+            <span className="sr-only">Rechercher des messages</span>
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, email or content..."
+              placeholder="Rechercher par nom, e-mail ou contenu..."
               className="placeholder-gray-400 bg-white border border-gray-200 shadow-sm rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-indigo-300"
             />
           </label>
@@ -61,21 +61,21 @@ const Messages = () => {
       </div>
 
       <div>
-        {loading && <p className="text-gray-600">Loading messages...</p>}
+        {loading && <p className="text-gray-600">Chargement des messages...</p>}
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && (!messages || messages.length === 0) && (
-          <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-gray-600">No messages yet.</div>
+          <div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-gray-600">Aucun message pour le moment.</div>
         )}
 
         {!loading && filtered && filtered.length === 0 && messages && messages.length > 0 && (
-          <div className="rounded-lg border border-dashed border-gray-200 p-6 text-center text-gray-600">No messages match your search.</div>
+          <div className="rounded-lg border border-dashed border-gray-200 p-6 text-center text-gray-600">Aucun message ne correspond à votre recherche.</div>
         )}
 
         <div className="mt-6 grid gap-4 grid-cols-1 md:grid-cols-2">
           {filtered && filtered.map((m) => {
             const id = m._id || m.id;
-            const created = new Date(m.createdAt || m.date || Date.now()).toLocaleString();
+            const created = new Date(m.createdAt || m.date || Date.now()).toLocaleString("fr-FR");
             const isExpanded = expandedId === id;
             return (
               <article key={id} className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">

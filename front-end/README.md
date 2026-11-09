@@ -18,7 +18,7 @@ L'API est par défaut `http://localhost:5000`. Pour utiliser une autre adresse, 
 ## Parcours
 
 - Le visiteur peut consulter les voitures et envoyer un message.
-- Le client connecté retrouve ses réservations et leur statut via **My Reservations** ; le bouton **Nouvelle réservation** permet d'en créer une.
+- Le client connecté retrouve ses réservations et leur statut via **Mes réservations** ; le bouton **Nouvelle réservation** permet d'en créer une.
 - L'administrateur accède au tableau de bord pour gérer voitures, clients, réservations et messages.
 
 ## Vérifications

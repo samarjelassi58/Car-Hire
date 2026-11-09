@@ -15,6 +15,7 @@ class CarsPage(BasePage):
     def open_car(self, name):
         self.click(self.card(name))
         self.wait_for_path_startswith("/car/")
+        self.wait.until(lambda driver: driver.find_element(By.TAG_NAME, "h1").text == name)
 
     def reserve(self, name):
         self.click((By.XPATH, f"{self.card(name)[1]}//button[contains(.,'Réserver')]"))

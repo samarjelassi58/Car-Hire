@@ -8,10 +8,10 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link , useLocation } from 'react-router-dom'; // ← pour connaître l'URL actuelle
 import { logoutUser } from "../app/redux/thunks/authThunks";
 const baseNavigation = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Our Cars', href: '/cars' },
-  { name: 'Reservation', href: '/reservation' },
+  { name: 'Accueil', href: '/' },
+  { name: 'À propos', href: '/about' },
+  { name: 'Nos voitures', href: '/cars' },
+  { name: 'Réservation', href: '/reservation' },
   { name: 'Contact', href: '/contact' },
 ];
 
@@ -27,10 +27,10 @@ const Navbar = () => {
     : [
       ...baseNavigation.map((item) =>
         item.href === '/reservation'
-          ? { name: 'My Reservations', href: '/my-reservations' }
+          ? { name: 'Mes réservations', href: '/my-reservations' }
           : item
       ),
-      ...(user.role === 'admin' ? [{ name: 'Dashboard', href: '/dashboard' }] : []),
+      ...(user.role === 'admin' ? [{ name: 'Tableau de bord', href: '/dashboard' }] : []),
     ];
   const handleLogout = () => {
   dispatch(logoutUser());
@@ -44,7 +44,7 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">Ouvrir le menu principal</span>
               <Bars3Icon className="block h-6 w-6 group-data-open:hidden" />
               <XMarkIcon className="hidden h-6 w-6 group-data-open:block" />
             </DisclosureButton>
@@ -89,14 +89,14 @@ const Navbar = () => {
     onClick={handleLogout}
     className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
   >
-    Logout
+    Déconnexion
   </button>
 ) : (
   <Link
     to="/login"
     className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
   >
-    Login
+    Connexion
   </Link>
 )}
 
@@ -132,14 +132,14 @@ const Navbar = () => {
               onClick={handleLogout}
               className="block w-full mt-2 rounded-md bg-red-500 text-white px-3 py-2 text-base font-medium text-center hover:bg-red-600 transition"
             >
-              Logout
+              Déconnexion
             </button>
           ) : (
             <Link
               to="/login"
               className="block mt-2 rounded-md bg-indigo-600 text-white px-3 py-2 text-base font-medium text-center hover:bg-indigo-700 transition"
             >
-              Login
+              Connexion
             </Link>
           )}
         </div>
