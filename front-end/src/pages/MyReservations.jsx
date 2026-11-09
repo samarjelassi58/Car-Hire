@@ -26,9 +26,13 @@ const MyReservations = () => {
       <Navbar />
       <main className="flex-grow px-4 py-12 pt-24">
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Mes réservations</h1>
-            <Link to="/reservation" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-widest text-indigo-600">Votre espace</p>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Mes réservations</h1>
+              <p className="mt-2 text-slate-600">Retrouvez vos demandes et suivez leur statut.</p>
+            </div>
+            <Link to="/reservation" className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700">
               Nouvelle réservation
             </Link>
           </div>
@@ -43,7 +47,7 @@ const MyReservations = () => {
 
           <ul className="space-y-4">
             {mine.map((r) => (
-              <li key={r._id} className="bg-white rounded-xl shadow p-5 flex flex-wrap items-center justify-between gap-4">
+              <li key={r._id} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div>
                   <p className="font-semibold text-gray-900">{r.carId?.name || "Voiture supprimée"}</p>
                   <p className="text-sm text-gray-600">

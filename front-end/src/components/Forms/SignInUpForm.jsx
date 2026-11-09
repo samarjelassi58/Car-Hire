@@ -99,7 +99,7 @@ export default function SignInpForm() {
     if (!error) setShowFailure(false);
   }, [error]);
   return (
-    <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <div className="isolate bg-slate-50 px-6 py-24 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
           {isSignIn ? "Sign In" : "Sign Up"}
@@ -119,7 +119,7 @@ export default function SignInpForm() {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
+      <form onSubmit={handleSubmit} className="mx-auto mt-10 max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           {!isSignIn && (
             <>

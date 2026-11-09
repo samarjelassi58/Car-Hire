@@ -1,5 +1,5 @@
-import { Card, CardHeader, CardBody, CardFooter, Typography, Button } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { imageUrl } from "../app/utils/api";
 
 const CarCard = ({ car }) => {
@@ -8,42 +8,33 @@ const CarCard = ({ car }) => {
   const subtitle = [category, fuelType].filter(Boolean).join(" · ");
 
   return (
-    <Card
-      className="mt-6 w-96 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+    <div
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
       onClick={() => navigate(`/car/${_id}`)}
     >
-      <CardHeader color="blue-gray" className="relative h-72">
-        <img src={imageUrl(image)} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-          {pricePerDay} TND/jour
+      <div className="relative h-52 overflow-hidden bg-slate-100">
+        <img src={imageUrl(image)} alt={name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+        {category && <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">{category}</span>}
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <h5 className="text-xl font-bold text-slate-900">
+          <Link to={`/car/${_id}`} onClick={(event) => event.stopPropagation()} className="hover:text-indigo-700">{name}</Link>
+        </h5>
+        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {options.map((option) => <span key={option} className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{option}</span>)}
         </div>
-      </CardHeader>
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
-          {name}
-        </Typography>
-        {subtitle && <Typography className="mb-3 text-gray-700">{subtitle}</Typography>}
-        <div className="flex flex-wrap gap-2">
-          {options.map((option) => (
-            <span key={option} className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md text-sm">
-              {option}
-            </span>
-          ))}
-        </div>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button
-          className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300"
-          fullWidth
-          onClick={(e) => {
-            e.stopPropagation();
+        <div className="mt-auto flex items-end justify-between gap-3 border-t border-slate-100 pt-5">
+          <div><p className="text-xs text-slate-500">À partir de</p><p className="font-bold text-slate-900">{pricePerDay} TND/jour</p></div>
+          <button type="button" className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700" onClick={(event) => {
+            event.stopPropagation();
             navigate(`/reservation/${_id}`);
-          }}
-        >
-          Réserver
-        </Button>
-      </CardFooter>
-    </Card>
+          }}>
+            Réserver <ArrowRight size={15} />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

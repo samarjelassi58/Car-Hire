@@ -51,7 +51,7 @@ const Car = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
-      <main className="flex-grow px-4 py-12 pt-24">
+      <main className="flex-grow px-4 py-12 pt-24 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm mb-8">
             <span className="text-gray-500">Accueil</span>
@@ -83,11 +83,11 @@ const Car = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <img src={imageUrl(car.image)} alt={car.name} className="w-full h-[400px] object-cover" />
               </div>
 
-              <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">Caractéristiques</h3>
                 <dl className="grid grid-cols-2 gap-4 text-gray-700 mb-6">
                   <div>
@@ -115,10 +115,10 @@ const Car = () => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-24">
+              <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-bold text-gray-800 mb-3">{car.name}</h1>
-                  <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3 rounded-full inline-block">
+                  <div className="inline-block rounded-xl bg-indigo-50 px-6 py-3 text-indigo-700">
                     <span className="text-2xl font-bold">{car.pricePerDay} TND/jour</span>
                   </div>
                 </div>
@@ -140,7 +140,7 @@ const Car = () => {
 
                 <div className="space-y-4">
                   <button
-                    className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg"
+                    className="w-full rounded-xl bg-indigo-600 px-6 py-4 font-semibold text-white transition hover:bg-indigo-700"
                     onClick={() => navigate(`/reservation/${car._id}`)}
                   >
                     Réserver maintenant

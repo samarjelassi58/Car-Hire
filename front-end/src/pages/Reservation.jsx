@@ -51,7 +51,8 @@ const Reservation = () => {
       <Navbar />
       <main className="flex-grow px-4 py-12 pt-24">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="mb-10">
+            <p className="mb-3 text-sm font-bold uppercase tracking-widest text-indigo-600">Votre prochain trajet</p>
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               {selectedCar ? `Réserver ${selectedCar.name}` : "Réservation"}
             </h1>
@@ -59,7 +60,7 @@ const Reservation = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-8">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-2">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Informations de réservation</h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -127,14 +128,14 @@ const Reservation = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-60 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg"
+                  className="w-full rounded-xl bg-indigo-600 px-6 py-4 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-60"
                 >
                   {submitting ? "Envoi..." : "Confirmer la réservation"}
                 </button>
               </form>
             </div>
 
-            <aside className="bg-white rounded-2xl shadow-lg p-8 h-fit lg:sticky lg:top-24">
+            <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:sticky lg:top-24">
               <h3 className="text-xl font-bold text-gray-800 mb-6">Résumé</h3>
               {selectedCar ? (
                 <div className="space-y-4">

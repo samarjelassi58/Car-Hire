@@ -26,7 +26,7 @@ const About = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-24 bg-gradient-to-br from-indigo-50 via-white to-white text-center px-4">
+      <section className="bg-slate-50 px-4 pb-20 pt-32 text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             About <span className="text-indigo-600">CarHire</span>
@@ -40,7 +40,7 @@ const About = () => {
       {/* Mission */}
       <section className="py-2 bg-white px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-3xl p-12 text-white shadow-xl">
+          <div className="rounded-3xl bg-slate-950 p-8 text-white sm:p-12">
             <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
             <p className="text-lg md:text-xl leading-relaxed">
               At CarHire, our goal is to empower your travels. Whether you're commuting, vacationing, or exploring — we deliver
@@ -65,7 +65,7 @@ const About = () => {
             {aboutFeatures.map((item) => (
               <div
                 key={item.title}
-                className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-left border border-gray-100"
+                className="rounded-2xl border border-slate-200 bg-white p-8 text-left shadow-sm transition hover:shadow-md"
               >
                 <div className="bg-indigo-100 w-14 h-14 rounded-full flex items-center justify-center mb-6">
                   <CheckCircleIcon className="h-8 w-8 text-indigo-600" />

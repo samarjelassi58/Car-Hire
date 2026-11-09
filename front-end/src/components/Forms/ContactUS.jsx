@@ -59,7 +59,7 @@ export default function ContactUS() {
   const loading = messageState.loading;
 
   return (
-    <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <div className="isolate bg-slate-50 px-6 py-24 sm:py-32 lg:px-8">
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -80,7 +80,7 @@ export default function ContactUS() {
   {showSuccess && <SuccessAlert message={alertMessage} onClose={() => setShowSuccess(false)} />}
   {showFailure && <FailureAlert message={alertMessage} onClose={() => setShowFailure(false)} />}
 
-  <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
+  <form onSubmit={handleSubmit} className="mx-auto mt-10 max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label htmlFor="first-name" className="block text-sm/6 font-semibold text-gray-900">

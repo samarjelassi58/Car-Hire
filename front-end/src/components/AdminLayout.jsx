@@ -46,16 +46,16 @@ const handleLogout = async () => {
 
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
       <div
-        className={`fixed z-40 top-0 left-0 h-full w-64 bg-gradient-to-b from-indigo-600 to-indigo-800 text-white transform transition-transform duration-500 ease-in-out shadow-2xl
+        className={`fixed z-40 top-0 left-0 h-full w-64 bg-slate-950 text-white transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Logo */}
 <Link to="/dashboard">
-  <div className="flex items-center justify-center h-20 border-b border-indigo-500 transition-all duration-300 hover:bg-indigo-700 cursor-pointer">
+  <div className="flex items-center justify-center h-20 border-b border-slate-800 transition-all duration-300 hover:bg-slate-900 cursor-pointer">
     <img
       className="h-10 w-auto transition-transform duration-300 hover:scale-110"
       src="/images/logo.svg"
@@ -63,6 +63,9 @@ const handleLogout = async () => {
     />
   </div>
 </Link>
+        <button type="button" onClick={() => setSidebarOpen(false)} aria-label="Fermer le menu" className="absolute right-3 top-6 rounded-lg p-2 text-slate-300 hover:bg-slate-800 sm:hidden">
+          <X size={20} />
+        </button>
 
         {/* Navigation */}
         <nav className="mt-8 px-4 space-y-2">
@@ -74,8 +77,8 @@ const handleLogout = async () => {
                 to={item.path}
                 className={`flex items-center justify-between text-sm font-medium px-4 py-3 rounded-lg transition-all duration-300
                   ${isActive
-                    ? "bg-white/20 shadow-md backdrop-blur-sm"
-                    : "text-indigo-100 hover:bg-white/10 hover:pl-6"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-300 hover:bg-white/10"
                   }
                 `}
               >
@@ -110,7 +113,7 @@ const handleLogout = async () => {
       </div>
 
       {/* Main content */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+      <div className={`min-w-0 flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? "sm:ml-64" : "ml-0"}`}>
         {/* Navbar */}
         <header className="bg-white shadow-sm p-4 flex items-center justify-between sticky top-0 z-30">
           {/* Bouton hamburger visible partout */}
@@ -139,7 +142,7 @@ const handleLogout = async () => {
 
         {/* Page Content */}
         <main className="flex-1 p-6 overflow-y-auto bg-gray-50">
-          <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-sm p-6 transition-all duration-300 hover:shadow-md">
+          <div className="max-w-6xl mx-auto bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6">
             {children}
           </div>
         </main>

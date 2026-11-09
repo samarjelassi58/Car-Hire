@@ -1,157 +1,99 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { ArrowRight, CalendarCheck, CarFront, Search } from "lucide-react";
+import { getCars } from "../app/redux/thunks/carThunks";
 import CarCard from "../components/CarCard";
-import { FaCarSide, FaShieldAlt, FaHeadset } from "react-icons/fa";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+
+const steps = [
+  { icon: <Search size={22} />, title: "Explorez", text: "Parcourez notre sélection et trouvez la voiture qui vous convient." },
+  { icon: <CalendarCheck size={22} />, title: "Réservez", text: "Choisissez vos dates et envoyez votre demande en quelques clics." },
+  { icon: <CarFront size={22} />, title: "Prenez la route", text: "Suivez la confirmation de votre réservation dans votre espace." },
+];
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { list, loading, error } = useSelector((state) => state.car);
+
+  useEffect(() => {
+    dispatch(getCars());
+  }, [dispatch]);
+
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       <Navbar />
       <main className="pt-16">
-        {/* Hero Section */}
-        <section
-          className="relative h-[100vh] flex items-center justify-center text-white bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `linear-gradient(to bottom right, rgba(79, 70, 229, 0.7), rgba(0, 0, 0, 0.5)), url('/images/sousse-car-hero.jpg')`,
-            backgroundAttachment: 'fixed',
-          }}
-        >
-          <div className="absolute inset-0 backdrop-blur-sm bg-black/20"></div>
-          <div className="relative z-10 text-center px-6 max-w-2xl">
-            <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-xl">
-              Rent the Car of Your Dreams
-            </h1>
-            <p className="text-lg sm:text-xl mb-8 text-white/90 drop-shadow-lg">
-              Luxury, economy, or SUV — fully insured & ready to go.
-            </p>
-            <a
-              href="/reservation"
-              className="inline-block bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-8 py-3 rounded-full shadow-xl ring-offset-2 ring-indigo-400 focus:ring-2 focus:outline-none transition duration-300"
-            >
-              Book Your Ride
-            </a>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section className="py-20 px-6 text-center bg-gradient-to-b from-white via-indigo-50 to-white">
-          <h2 className="text-3xl font-bold mb-10 text-gray-800">How it works</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-5xl mx-auto">
-            {[
-              { step: "1", title: "Choose", desc: "Browse our vehicle selection." },
-              { step: "2", title: "Book", desc: "Book online in just a few clicks." },
-              { step: "3", title: "Drive", desc: "Pick up your car and hit the road." },
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="p-6 bg-white rounded-xl shadow-md">
-                <div className="text-4xl font-bold text-indigo-600 mb-4">{step}</div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
-                <p className="text-gray-600">{desc}</p>
+        <section className="bg-slate-950 text-white">
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 sm:py-28 lg:grid-cols-2 lg:py-32">
+            <div>
+              <p className="mb-5 text-sm font-bold uppercase tracking-[0.2em] text-indigo-300">Votre voyage commence ici</p>
+              <h1 className="max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+                La bonne voiture pour chaque trajet.
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
+                Trouvez votre prochaine voiture, choisissez vos dates et suivez votre réservation en toute simplicité.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link to="/cars" className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-6 py-4 font-semibold text-white transition hover:bg-indigo-400">
+                  Découvrir les voitures <ArrowRight size={18} />
+                </Link>
+                <Link to="/reservation" className="inline-flex items-center rounded-xl border border-slate-600 px-6 py-4 font-semibold text-white transition hover:bg-white/10">
+                  Faire une réservation
+                </Link>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Featured Cars */}
-        <section className="py-20 px-6 bg-white">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Featured Cars</h2>
-          <div className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto">
-            <CarCard 
-              car={{
-                name: "Toyota Yaris",
-                price: "80 TND/day",
-                image: "/images/yaris.jpg",
-                features: ["5 Seats", "Manual", "AC", "Bluetooth"],
-                description: "Perfect for city driving and economical fuel consumption."
-              }}
-            />
-            <CarCard 
-              car={{
-                name: "BMW 3 Series",
-                price: "200 TND/day",
-                image: "/images/bmw.jpg",
-                features: ["5 Seats", "Automatic", "Leather", "GPS"],
-                description: "Luxury sedan with premium comfort and advanced features."
-              }}
-            />
-            <CarCard 
-              car={{
-                name: "Dacia Duster",
-                price: "120 TND/day",
-                image: "/images/duster.jpg",
-                features: ["5 Seats", "4WD", "AC", "High Ground"],
-                description: "Robust SUV perfect for adventures and off-road trips."
-              }}
-            />
-          </div>
-        </section>
-
-        {/* Services */}
-        <section className="py-20 px-6 max-w-6xl mx-auto bg-white">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Our Services</h2>
-          <div className="grid sm:grid-cols-3 gap-8 text-center">
-            {[{
-              icon: <FaCarSide />, title: "Wide Vehicle Selection", desc: "From city cars to luxury models"
-            }, {
-              icon: <FaShieldAlt />, title: "Insurance Included", desc: "Drive with peace of mind"
-            }, {
-              icon: <FaHeadset />, title: "24/7 Assistance", desc: "We're here whenever you need"
-            }].map((service, i) => (
-              <div key={i} className="p-6 rounded-lg shadow bg-indigo-50">
-                <div className="text-indigo-600 text-3xl mb-2 mx-auto">{service.icon}</div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">{service.title}</h3>
-                <p className="text-gray-600">{service.desc}</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-7 sm:p-10">
+              <div className="flex h-48 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-400/20 to-slate-800 sm:h-60">
+                <CarFront className="h-28 w-28 text-indigo-200 sm:h-36 sm:w-36" strokeWidth={1} aria-hidden="true" />
               </div>
-            ))}
+              <p className="mt-6 text-sm font-semibold uppercase tracking-widest text-indigo-300">Simple et pratique</p>
+              <h2 className="mt-2 text-2xl font-semibold">Votre prochaine escapade, à votre rythme.</h2>
+              <p className="mt-3 text-slate-300">Consultez les tarifs et les caractéristiques avant de faire votre choix.</p>
+            </div>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="bg-gradient-to-b from-indigo-50 to-white py-20 px-6">
-          <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">What Our Customers Say</h2>
-          <div className="max-w-5xl mx-auto grid sm:grid-cols-3 gap-8 text-center">
-            {[{ name: "Sami B.", quote: "Great service, clean car, easy process!" },
-              { name: "Amira T.", quote: "Affordable and reliable. I’ll book again!" },
-              { name: "Hatem Z.", quote: "Best car rental in Tunisia!" }].map((t, i) => (
-              <div key={i} className="bg-white p-6 rounded-lg shadow">
-                <p className="italic text-gray-700 mb-4">"{t.quote}"</p>
-                <h4 className="font-semibold text-indigo-600">{t.name}</h4>
-              </div>
-            ))}
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:py-20">
+          <div className="flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-indigo-600">Notre catalogue</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">Trouvez votre prochaine voiture</h2>
+              <p className="mt-3 text-slate-600">Une sélection de véhicules pour vos déplacements.</p>
+            </div>
+            <Link to="/cars" className="inline-flex items-center gap-2 font-semibold text-indigo-700 hover:text-indigo-500">
+              Voir toutes les voitures <ArrowRight size={18} />
+            </Link>
+          </div>
+          {loading && <p className="mt-8 text-slate-600">Chargement...</p>}
+          {error && <p role="alert" className="mt-8 text-red-600">{error}</p>}
+          {!loading && !error && list.length === 0 && <p className="mt-8 text-slate-600">Aucune voiture disponible pour le moment.</p>}
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {list.slice(0, 3).map((car) => <CarCard key={car._id} car={car} />)}
           </div>
         </section>
 
-        {/* Call to Action */}
-        <section className="bg-indigo-600 text-white py-16 px-6 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to drive?</h2>
-          <p className="text-lg mb-6">Book your vehicle online and hit the road today!</p>
-          <a
-            href="/reservation"
-            className="bg-white text-indigo-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition"
-          >
-            Book Now
-          </a>
-        </section>
-
-        {/* Location */}
-        <section className="py-20 px-6 text-center bg-white">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">Our Location</h2>
-          <p className="mb-4 text-gray-600">Visit us in Tunis or get your car delivered anywhere in Tunisia!</p>
-          <div className="w-full max-w-4xl mx-auto h-64 rounded-lg overflow-hidden">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3190.945490962908!2d10.64088887592437!3d35.82886632034769!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1302207f0eeb8b3f%3A0x637af93c00f0816e!2sSousse%2C%20Tunisia!5e0!3m2!1sen!2stn!4v1717841000000!5m2!1sen!2stn"
-              width="100%"
-              height="100%"
-              allowFullScreen=""
-              loading="lazy"
-              title="CarHire Location"
-              className="border-0 w-full h-full"
-            ></iframe>
+        <section className="bg-slate-50 px-6 py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl">
+            <p className="text-sm font-bold uppercase tracking-widest text-indigo-600">Comment ça marche</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">Trois étapes pour partir</h2>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {steps.map(({ icon, title, text }, index) => (
+                <div key={title} className="rounded-2xl border border-slate-200 bg-white p-7">
+                  <div className="flex items-center justify-between">
+                    <span className="rounded-xl bg-indigo-50 p-3 text-indigo-600">{icon}</span>
+                    <span className="text-sm font-bold text-slate-400">0{index + 1}</span>
+                  </div>
+                  <h3 className="mt-6 text-lg font-bold text-slate-900">{title}</h3>
+                  <p className="mt-2 leading-relaxed text-slate-600">{text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
-
-        {/* Footer */}
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 };

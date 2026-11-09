@@ -1,79 +1,37 @@
-import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
-import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 
-const Footer = () => {
-  return (
-    <footer className="bg-gray-900 text-white py-14 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-        {/* Logo & Description */}
-        <div>
-          <h3 className="text-3xl font-bold mb-3 text-indigo-500">CarHire</h3>
-          <p className="text-gray-400 text-sm leading-relaxed">
-            Your trusted partner for reliable car rentals across Tunisia. Discover freedom on the road with CarHire.
-          </p>
-        </div>
-
-        {/* Navigation Links */}
-        <div>
-          <h4 className="text-lg font-semibold mb-5 text-indigo-400">Quick Links</h4>
-          <ul className="space-y-2 text-sm">
-            {[
-              { label: 'Home', href: '/' },
-              { label: 'About', href: '/about' },
-              { label: 'Our Cars', href: '/cars' },
-              { label: 'Reservation', href: '/reservation' },
-              { label: 'Contact', href: '/contact' },
-            ].map(({ label, href }) => (
-              <li key={href}>
-                <a
-                  href={href}
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  {label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact & Social Media */}
-        <div>
-          <h4 className="text-lg font-semibold mb-5 text-indigo-400">Contact</h4>
-          <div className="text-gray-400 text-sm space-y-3">
-            <p className="flex items-center gap-2">
-              <EnvelopeIcon className="w-5 h-5 text-indigo-500" />
-              contact@carhire.tn
-            </p>
-            <p className="flex items-center gap-2">
-              <PhoneIcon className="w-5 h-5 text-indigo-500" />
-              +216 12 345 678
-            </p>
-          </div>
-          <div className="flex space-x-4 mt-6">
-            {[
-              { icon: <FaFacebookF />, href: 'https://facebook.com', color: 'hover:bg-blue-600' },
-              { icon: <FaInstagram />, href: 'https://instagram.com', color: 'hover:bg-pink-600' },
-              { icon: <FaTwitter />, href: 'https://twitter.com', color: 'hover:bg-sky-500' },
-            ].map(({ icon, href, color }, i) => (
-              <a
-                key={i}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:text-white transition-colors ${color}`}
-              >
-                {icon}
-              </a>
-            ))}
-          </div>
+const Footer = () => (
+  <footer className="bg-slate-950 px-6 py-14 text-slate-300">
+    <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
+      <div>
+        <Link to="/" className="text-2xl font-bold tracking-tight text-white">Car<span className="text-indigo-400">Hire</span></Link>
+        <p className="mt-4 max-w-xs text-sm leading-7 text-slate-400">Une façon simple de trouver et de réserver votre prochaine voiture.</p>
+      </div>
+      <div>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-white">Navigation</h2>
+        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+          {[["Home", "/"], ["About", "/about"], ["Our Cars", "/cars"], ["Reservation", "/reservation"], ["Contact", "/contact"]].map(([label, path]) => (
+            <Link key={path} to={path} className="hover:text-white">{label}</Link>
+          ))}
         </div>
       </div>
-
-      <div className="border-t border-gray-700 mt-12 pt-6 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} CarHire. All rights reserved.
+      <div>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-white">Une question ?</h2>
+        <p className="mt-5 text-sm leading-6 text-slate-400">Notre formulaire de contact est à votre disposition.</p>
+        <Link to="/contact" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indigo-300 hover:text-white">Nous contacter <ArrowUpRight size={16} /></Link>
+        <p className="mt-4 text-sm text-slate-400">contact@carhire.tn · +216 12 345 678</p>
+        <div className="mt-4 flex gap-4 text-sm">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">Facebook</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">Instagram</a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">Twitter</a>
+        </div>
       </div>
-    </footer>
-  );
-};
+    </div>
+    <div className="mx-auto mt-12 max-w-7xl border-t border-slate-800 pt-6 text-sm text-slate-500">
+      &copy; {new Date().getFullYear()} CarHire. Tous droits réservés.
+    </div>
+  </footer>
+);
 
 export default Footer;

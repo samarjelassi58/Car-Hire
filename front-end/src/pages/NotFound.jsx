@@ -4,9 +4,9 @@ import Navbar from "../components/Navbar";
 
 const NotFound = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col bg-slate-50">
       <Navbar />
-      <main className="flex-grow flex flex-col items-center justify-center text-center px-4 m-30">
+      <main className="flex flex-grow flex-col items-center justify-center px-4 py-32 text-center">
         <h1 className="text-6xl font-bold text-indigo-600 mb-4">404</h1>
         <p className="text-2xl font-semibold mb-2">Page non trouvée</p>
         <p className="text-gray-600 mb-6">

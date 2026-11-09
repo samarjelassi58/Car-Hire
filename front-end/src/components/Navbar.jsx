@@ -37,12 +37,12 @@ const Navbar = () => {
 };
 
   return (
-    <Disclosure as="nav" className="bg-white fixed top-0 left-0 right-0 z-50 shadow-md">
+    <Disclosure as="nav" className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
 
           {/* Mobile menu button */}
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
               <span className="sr-only">Open main menu</span>
               <Bars3Icon className="block h-6 w-6 group-data-open:hidden" />
@@ -58,7 +58,7 @@ const Navbar = () => {
                </Link>
               
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden lg:ml-8 lg:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => {
                   const isActive = location.pathname === item.href;
@@ -69,9 +69,9 @@ const Navbar = () => {
                       to={item.href}
                       className={classNames(
                         isActive
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-gray-600 hover:bg-indigo-100 hover:text-indigo-700',
-                        'rounded-md px-3 py-2 text-sm font-medium transition'
+                          ? 'bg-indigo-50 text-indigo-700'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                        'rounded-lg px-3 py-2 text-sm font-semibold transition'
                       )}
                     >
                       {item.name}
@@ -87,14 +87,14 @@ const Navbar = () => {
            {user ? (
   <button
     onClick={handleLogout}
-    className="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition"
+    className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
   >
     Logout
   </button>
 ) : (
   <Link
     to="/login"
-    className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition"
+    className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
   >
     Login
   </Link>
@@ -105,7 +105,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile nav panel */}
-      <DisclosurePanel className="sm:hidden">
+      <DisclosurePanel className="border-t border-slate-100 lg:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
