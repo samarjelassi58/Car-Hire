@@ -20,6 +20,8 @@ npm run dev
 
 Si l'administrateur existe déjà, ne pas relancer sa création. L'API écoute par défaut sur `http://localhost:5000` ; vérifier `http://localhost:5000/api/health`.
 
+Pour remplacer le mot de passe d'un administrateur existant dans une base locale, renseigner `ADMIN_EMAIL` et le nouveau `ADMIN_PASSWORD` dans `.env`, puis exécuter `node scripts/reset-local-admin-password.js`. Ce script refuse les connexions distantes et ne modifie que le compte administrateur correspondant. Protéger le fichier `.env` et ne pas le partager.
+
 | Variable | Utilisation |
 |---|---|
 | `MONGO_URI` | Connexion MongoDB, par exemple `mongodb://127.0.0.1:27017/car-hire` |
@@ -27,9 +29,26 @@ Si l'administrateur existe déjà, ne pas relancer sa création. L'API écoute p
 | `PORT` | Port de l'API ; 5000 par défaut |
 | `CORS_ORIGINS` | Origines frontend autorisées, séparées par des virgules |
 | `MONGO_AUTO_INDEX` | `true` pour créer les index au démarrage |
+| `IMAGE_STORAGE` | `local` par défaut, ou `cloudinary` pour stocker les nouvelles images en ligne |
+| `CLOUDINARY_URL` | URL secrète Cloudinary, obligatoire si `IMAGE_STORAGE=cloudinary` |
 | `ADMIN_FIRST_NAME`, `ADMIN_LAST_NAME`, `ADMIN_PHONE`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Utilisés pour créer le premier administrateur |
 
 Ne pas partager ni versionner `.env` ou les identifiants.
+
+Pour un hébergement à système de fichiers temporaire, configurer `IMAGE_STORAGE=cloudinary` et `CLOUDINARY_URL` dans les variables secrètes de l'hébergeur. Les nouveaux fichiers sont envoyés à Cloudinary et leur URL HTTPS est enregistrée dans la base. Les images locales existantes ne sont **pas** transférées automatiquement. La suppression d'une voiture ne supprime pas ses images sur Cloudinary : surveiller l'utilisation et nettoyer les images inutilisées depuis Cloudinary après vérification.
+
+Avant une migration, `node scripts/check-migration-source.js` vérifie en lecture seule la présence des fichiers d'images, les références des réservations et la correspondance exacte entre périodes et réservations actives dans la base locale configurée. Cette vérification ne copie aucune donnée, ne contrôle pas le contenu des images et ne remplace pas une sauvegarde ou une vérification complète de la migration.
+
+### Migration vers Atlas et Cloudinary
+
+La migration copie les voitures, les utilisateurs (y compris les mots de passe hachés), les réservations, les messages et les jetons révoqués vers la base Atlas `car-hire`. Elle conserve les identifiants MongoDB et les périodes réservées, et envoie les images locales vers le dossier Cloudinary `car-hire-migration`. Les fichiers locaux ne sont ni déplacés ni supprimés. Vérifier que le transfert des données personnelles est autorisé et conserver une sauvegarde privée.
+
+1. Dans `.env`, conserver `MONGO_URI` pour la source locale et définir `ATLAS_MONGO_URI` avec la base Atlas `car-hire`. Configurer `CLOUDINARY_URL` localement.
+2. Depuis `back-end`, exécuter `npm run migrate:atlas`. Cette simulation vérifie la source et la cible, et n’envoie ni documents ni images.
+3. Pour lancer la copie, exécuter `node scripts/migrate-to-atlas.js --execute`, puis saisir exactement `COPIER MES DONNEES` à l’invite. Le script revérifie les données et refuse les conflits ; il ne remplace ni ne supprime les documents Atlas. Il peut reprendre une migration partielle lorsque les documents déjà présents correspondent à la source.
+4. Attendre la confirmation et les comptes de vérification. Vérifier ensuite les données et images dans Atlas et Cloudinary avant de déployer le backend.
+
+Ne pas partager `.env`, les chaînes de connexion, les secrets ou les données exportées. Une erreur pendant le téléversement peut laisser des images inutilisées dans Cloudinary ; le script ne les supprime pas automatiquement.
 
 ## Scripts
 
@@ -40,6 +59,7 @@ Ne pas partager ni versionner `.env` ou les identifiants.
 | `npm run create-admin` | Création d'un administrateur |
 | `npm run seed-cars` | Ajout des voitures de démonstration absentes par nom |
 | `npm run normalize-cars` | Conversion des documents contenant des champs français et copie des images locales trouvées |
+| `npm run migrate:atlas` | Simulation de migration (aucune écriture) ; ajouter `-- --execute` pour demander explicitement la copie |
 | `npm test` | Tests unitaires Node.js |
 
 ## Routes principales

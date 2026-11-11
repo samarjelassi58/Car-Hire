@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Car = require("../models/Car");
 const Reservation = require("../models/Reservations");
 const ApiError = require("../utils/ApiError");
+const { uploadCarImage } = require("../services/imageStorage");
 
 const editableFields = ["name", "pricePerDay", "fuelType", "transmission", "category", "tag", "options", "image"];
 const fieldLabels = { fuelType: "Le carburant", transmission: "La transmission", category: "La catégorie", tag: "L'étiquette", image: "L'image" };
@@ -65,9 +66,10 @@ const buildCarData = (body, isUpdate = false) => {
   return data;
 };
 
-exports.uploadImage = (req, res) => {
+exports.uploadImage = async (req, res) => {
   if (!req.file) throw new ApiError(400, "Aucun fichier image fourni");
-  res.status(201).json({ path: `/uploads/cars/${req.file.filename}` });
+  const imagePath = await uploadCarImage(req.file);
+  res.status(201).json({ path: imagePath });
 };
 
 exports.createCar = async (req, res) => {
