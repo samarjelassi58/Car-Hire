@@ -15,6 +15,8 @@ Ouvrir l'adresse affichée par Vite, généralement `http://localhost:5173`. Le 
 
 L'API est par défaut `http://localhost:5000`. Pour utiliser une autre adresse, copier `.env.example` vers `.env` et modifier `VITE_API_URL`. Configurer aussi `CORS_ORIGINS` côté backend si l'origine du frontend change.
 
+Pour Vercel, définir la racine du projet sur `front-end` et `VITE_API_URL` sur l'URL publique de l'API avant la compilation. `vercel.json` permet de recharger les routes React directement.
+
 ## Parcours
 
 - Le visiteur peut consulter les voitures et envoyer un message.
